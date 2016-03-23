@@ -2,10 +2,11 @@
 
 namespace App\Models\Core;
 
+use App\Models\Contracts\InterfaceModel;
 use App\Models\Core\SeverityControl;
 use App\Models\Core\Symptom;
 
-class Disease {
+class Disease implements InterfaceModel {
 
     /**
      *
@@ -87,26 +88,53 @@ class Disease {
 
     /**
      * 
-     * @return \App\Models\Core\SeverityControlv
+     * @return \App\Models\Core\SeverityControl
      */
-    /* public function getSeverityControl() {
-      return $this->severityControl;
-      } */
+    public function getSeverityControl() {
+        return $this->severityControl;
+    }
 
     /**
      * 
-     * @param SeverityControl $severityControl
+     * @param \App\Models\Core\SeverityControl $severityControl
      */
-    /* public function setSeverityControl(SeverityControl $severityControl) {
-      $this->severityControl = $severityControl;
-      } */
+    public function setSeverityControl(SeverityControl $severityControl) {
+        $this->severityControl = $severityControl;
+    }
+
+    /**
+     * 
+     * @param \App\Models\Core\Symptom $symptom
+     */
+    public function addSymptom(Symptom $symptom) {
+        $this->symptoms[$symptom->getCode()] = $symptom;
+    }
+
+    /**
+     * 
+     * @return array \App\Models\Core\Symptom
+     */
+    public function getAllSymptoms() {
+        return $this->symptoms;
+    }
 
     /**
      * 
      * @return array
      */
     public function toArray() {
+        $symptoms = [];
+        
+        foreach ($this->getAllSymptoms() as $symptom) {
+            $symptoms[] = $symptom->toArray();
+        }
+        
         return [
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'desc' => $this->getDesc(),
+            'symptoms' => $symptoms,
+            'sevirity_control' => $this->getSeverityControl(),
         ];
     }
 

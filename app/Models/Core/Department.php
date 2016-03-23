@@ -2,9 +2,10 @@
 
 namespace App\Models\Core;
 
+use App\Models\Contracts\InterfaceModel;
 use App\Models\Core\Disease;
 
-class Department {
+class Department implements InterfaceModel {
 
     /**
      *
@@ -108,7 +109,17 @@ class Department {
      * @return array
      */
     public function toArray() {
+        $diseases = [];
+
+        foreach ($this->getAllDiseases() as $disease) {
+            $diseases[] = $disease->toArray();
+        }
+
         return [
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'desc' => $this->getDesc(),
+            'diseases' => $diseases,
         ];
     }
 

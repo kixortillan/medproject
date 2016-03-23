@@ -15,7 +15,7 @@ interface InterfaceDepartmentRepository {
     /**
      * 
      */
-    public function getAll();
+    public function all();
 
     /**
      * 

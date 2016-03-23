@@ -25,7 +25,7 @@ class DepartmentRepository extends BaseRepository implements InterfaceDepartment
         return $model;
     }
 
-    public function getAll() {
+    public function all() {
         $records = DB::table($this->mainTable)->get();
 
         $models = [];

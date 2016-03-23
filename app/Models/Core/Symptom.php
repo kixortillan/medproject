@@ -2,7 +2,9 @@
 
 namespace App\Models\Core;
 
-class Symptom {
+use App\Models\Contracts\InterfaceModel;
+
+class Symptom implements InterfaceModel {
 
     /**
      *
@@ -68,6 +70,18 @@ class Symptom {
      */
     public function setDesc($desc) {
         $this->desc = $desc;
+    }
+
+    /**
+     * 
+     * @return array
+     */
+    public function toArray() {
+        return [
+            'id' => $this->getId(),
+            'code' => $this->getCode(),
+            'desc' => $this->getDesc(),
+        ];
     }
 
 }
