@@ -14,3 +14,8 @@
 $app->get('/', function () use ($app) {
     return $app->version();
 });
+
+$app->get('diseases', 'Core\DiseaseController@index');
+$app->get('diseases/{id}', 'Core\DiseaseController@index');
+
+$app->post('diseases', 'Core\DiseaseController@store');

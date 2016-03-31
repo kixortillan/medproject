@@ -6,6 +6,8 @@ use App\Libraries\Repositories\Core\BaseRepository;
 use App\Models\Core\Disease;
 use App\Models\Core\Symptom;
 
+use DB;
+
 class DiseaseRepository extends BaseRepository {
 
     /**
