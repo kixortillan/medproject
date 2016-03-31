@@ -2,10 +2,11 @@
 
 namespace App\Libraries\Repositories\Core;
 
+use App\Libraries\Repositories\Core\Exceptions\DiseaseNotFoundException;
 use App\Libraries\Repositories\Core\BaseRepository;
 use App\Models\Core\Disease;
 use App\Models\Core\Symptom;
-
+use Exception;
 use DB;
 
 class DiseaseRepository extends BaseRepository {
@@ -33,8 +34,16 @@ class DiseaseRepository extends BaseRepository {
      * @return Disease
      */
     public function get($id) {
-        $record = DB::table($this->mainTable)->where('id', $id)
-                ->first();
+        try {
+            $record = DB::table($this->mainTable)->where('id', $id)
+                    ->first();
+        } catch (Exception $ex) {
+            throw $ex;
+        }
+
+        if ($record == null) {
+            throw new DiseaseNotFoundException();
+        }
 
         $model = new Disease();
         $model->setId($record->id);
@@ -49,7 +58,11 @@ class DiseaseRepository extends BaseRepository {
      * @return array \App\Models\Core\Disease
      */
     public function all() {
-        $records = DB::table($this->mainTable)->get();
+        try {
+            $records = DB::table($this->mainTable)->get();
+        } catch (Exception $ex) {
+            throw $ex;
+        }
 
         $models = [];
         foreach ($records as $record) {
@@ -71,13 +84,17 @@ class DiseaseRepository extends BaseRepository {
      * @throws Exception
      */
     public function withSymptoms($id) {
-        $records = DB::table($this->mappingSymptomsTable)
-                ->join($this->symptomsTable, $this->symptomsTable . 'id', '=', $this->mappingSymptomsTable . 'symptom_id')
-                ->where($this->mappingSymptomsTable . 'disease_id', $id)
-                ->get();
+        try {
+            $records = DB::table($this->mappingSymptomsTable)
+                    ->join($this->symptomsTable, $this->symptomsTable . 'id', '=', $this->mappingSymptomsTable . 'symptom_id')
+                    ->where($this->mappingSymptomsTable . 'disease_id', $id)
+                    ->get();
+        } catch (Exception $ex) {
+            throw $ex;
+        }
 
         if (empty($records)) {
-            throw new Exception('Record not found.');
+            throw new DiseaseNotFoundException();
         }
 
         $model = new Disease();
