@@ -36,7 +36,7 @@ class Disease implements InterfaceModel {
      *
      * @var array App\Models\Core\Symptom
      */
-    protected $symptoms;
+    protected $symptoms = [];
 
     /**
      * 

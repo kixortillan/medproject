@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Core;
 use App\Libraries\Repositories\Core\DiseaseRepository;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Core\Disease;
 use Exception;
 
 class DiseaseController extends Controller {
@@ -42,7 +43,21 @@ class DiseaseController extends Controller {
      * @return string
      */
     public function store(Request $request) {
-        return 'no';
+        try {
+            $name = $request->get('name', null);
+            $desc = $request->get('desc', null);
+            
+            $model = new Disease();
+
+            $model->setName($name);
+            $model->setDesc($desc);
+
+            $model = $this->diseaseRepo->save($model);
+
+            return response()->json($model->toArray());
+        } catch (Exception $ex) {
+            throw $ex;
+        }
     }
 
     /**

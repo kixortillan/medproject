@@ -114,4 +114,25 @@ class DiseaseRepository extends BaseRepository {
         return $model;
     }
 
+    /**
+     * 
+     * @param Disease $disease
+     * @return Disease
+     * @throws Exception
+     */
+    public function save(Disease $disease) {
+        try {
+            $id = DB::table($this->mainTable)->insertGetId([
+                'name' => $disease->getName(),
+                'desc' => $disease->getDesc()
+            ]);
+        } catch (Exception $ex) {
+            throw $ex;
+        }
+
+        $disease->setId($id);
+
+        return $disease;
+    }
+
 }
