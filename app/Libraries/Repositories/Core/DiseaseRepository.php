@@ -135,4 +135,14 @@ class DiseaseRepository extends BaseRepository {
         return $disease;
     }
 
+    /**
+     * 
+     * @param int $id
+     * @return int
+     */
+    public function delete($id) {
+        return DB::table($this->mainTable)
+                        ->delete($id);
+    }
+
 }

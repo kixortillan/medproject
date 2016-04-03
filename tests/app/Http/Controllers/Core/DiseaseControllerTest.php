@@ -22,15 +22,32 @@ class DiseaseControllerTest extends TestCase {
             'id',
             'name',
             'desc'
-        ]);
+        ])->assertResponseOk();
     }
 
     public function testIndex() {
-        $this->get('diseases')->shouldReturnJson();
+        //$this->get('diseases')->shouldReturnJson();
     }
 
     public function testIndexWithId() {
         
+    }
+    
+    public function testEdit(){
+        
+    }
+    
+    public function testDelete() {
+        $faker = Faker\Factory::create();
+
+        $id = DB::table('diseases')->insertGetId([
+            'name' => $faker->word,
+            'desc' => $faker->sentence,
+        ]);
+
+        $this->delete("diseases/{$id}")
+                ->shouldReturnJson()
+                ->assertResponseOk();
     }
 
 }

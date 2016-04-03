@@ -30,8 +30,10 @@ class DiseaseController extends Controller {
             if ($id == null) {
                 $records = $this->diseaseRepo->all();
             } else {
-                $record = $this->diseaseRepo->get($id);
+                $records = $this->diseaseRepo->get($id);
             }
+
+            return response()->json($records->toArray());
         } catch (Exception $ex) {
             abort(500);
         }
@@ -46,7 +48,7 @@ class DiseaseController extends Controller {
         try {
             $name = $request->get('name', null);
             $desc = $request->get('desc', null);
-            
+
             $model = new Disease();
 
             $model->setName($name);
@@ -66,7 +68,12 @@ class DiseaseController extends Controller {
      * @param type $id
      */
     public function edit(Request $request, $id) {
-        
+        try{
+            $this->diseaseRepo->delete($id);
+        } catch (Exception $ex) {
+
+        }
+        return response()->json(['id' => $id]);
     }
 
     /**

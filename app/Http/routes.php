@@ -19,4 +19,4 @@ $app->get('diseases', 'Core\DiseaseController@index');
 $app->get('diseases/{id}', 'Core\DiseaseController@index');
 $app->post('diseases', 'Core\DiseaseController@store');
 $app->patch('diseases/{id}', 'Core\DiseaseController@edit');
-$app->delete('diseaes/{id}', 'Core\DiseaseController@delete');
+$app->delete('diseases/{id}', 'Core\DiseaseController@delete');
