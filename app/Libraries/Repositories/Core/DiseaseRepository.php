@@ -139,10 +139,15 @@ class DiseaseRepository extends BaseRepository {
      * 
      * @param int $id
      * @return int
+     * @throws Exception
      */
     public function delete($id) {
-        return DB::table($this->mainTable)
-                        ->delete($id);
+        try {
+            return DB::table($this->mainTable)
+                            ->delete($id);
+        } catch (Exception $ex) {
+            throw $ex;
+        }
     }
 
 }
