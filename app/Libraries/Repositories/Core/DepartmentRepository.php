@@ -5,12 +5,18 @@ namespace App\Libraries\Repositories\Core;
 use App\Libraries\Repositories\Core\Contracts\InterfaceDepartmentRepository;
 use App\Libraries\Repositories\Core\BaseRepository;
 use App\Models\Core\Department;
+use App\Models\Core\Disease;
 
 class DepartmentRepository extends BaseRepository implements InterfaceDepartmentRepository {
+
+    protected $diseaseTable;
+    protected $diseaseMapTable;
 
     public function __construct() {
         parent::__construct();
         $this->mainTable = 'department';
+        $this->diseaseTable = 'diseases';
+        $this->diseaseMapTable = 'department_diseases';
     }
 
     /**
@@ -93,6 +99,35 @@ class DepartmentRepository extends BaseRepository implements InterfaceDepartment
         try {
             return DB::table($this->mainTable)
                             ->delete($id);
+        } catch (Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    public function withDisease() {
+        try {
+            $records = DB::table($this->mainTable)
+                    ->join($this->diseaseMapTable, "{$this->diseaseMapTable}.department_id", "=", "{$this->mainTable}.id")
+                    ->join($this->diseaseTable, "{$this->diseaseTable}.id", "=", "{$this->diseaseMapTable}.disease_id")
+                    ->get();
+
+            $models = [];
+            foreach ($records as $record) {
+                $dept = new Department();
+                $dept->setId($record->id);
+                $dept->setName($record->name);
+                $dept->setDesc($record->desc);
+                
+                $disease = new Disease();
+                $disease->setId($record->disease_id);
+                $disease->setName($record->name);
+                $disease->setDesc($record->desc);
+                
+                $dept->addDisease($disease);
+                $models[] = $temp;
+            }
+
+            return $models;
         } catch (Exception $ex) {
             throw $ex;
         }

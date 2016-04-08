@@ -78,4 +78,7 @@ class DepartmentController extends Controller {
         }
     }
 
+    public function getWithDiseases(Request $request, $id, $diseaseId = null){
+        
+    }
 }
