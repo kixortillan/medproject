@@ -21,7 +21,14 @@ class DepartmentController extends Controller {
             if ($id != null) {
                 $this->departmentRepo->get($id);
             } else {
-                $this->departmentRepo->all();
+                $models = $this->departmentRepo->all();
+
+                $response = [];
+                foreach ($models as $model) {
+                    $response[] = $model->toArray();
+                }
+
+                return response()->json($response);
             }
         } catch (Exception $ex) {
             throw $ex;
@@ -30,6 +37,7 @@ class DepartmentController extends Controller {
 
     public function store(Request $request) {
         try {
+            $code = $request->get('code', null);
             $name = $request->get('name', null);
             $desc = $request->get('desc', null);
         } catch (Exception $ex) {
@@ -38,6 +46,7 @@ class DepartmentController extends Controller {
 
         try {
             $model = new Department();
+            $model->setCode($code);
             $model->setName($name);
             $model->setDesc($desc);
 
@@ -51,6 +60,7 @@ class DepartmentController extends Controller {
 
     public function edit(Request $request, $id) {
         try {
+            $code = $request->get('code', null);
             $name = $request->get('name', null);
             $desc = $request->get('desc', null);
         } catch (Exception $ex) {
@@ -59,6 +69,7 @@ class DepartmentController extends Controller {
 
         try {
             $model = new Department();
+            $model->setCode($code);
             $model->setName($name);
             $model->setDesc($desc);
 
@@ -78,7 +89,8 @@ class DepartmentController extends Controller {
         }
     }
 
-    public function getWithDiseases(Request $request, $id, $diseaseId = null){
+    public function getWithDiseases(Request $request, $id, $diseaseId = null) {
         
     }
+
 }

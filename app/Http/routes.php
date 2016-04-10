@@ -25,6 +25,6 @@ $app->get('departments', 'Core\DepartmentController@index');
 $app->get('departments/{id}', 'Core\DepartmentController@index');
 $app->get('departments/{id}/diseases', 'Core\DepartmentController@index');
 $app->get('departments/{id}/diseases/{diseaseId}', 'Core\DepartmentController@index');
-$app->post('departments', 'Core\DiseaseController@store');
+$app->post('departments', 'Core\DepartmentController@store');
 $app->patch('departments/{id}', 'Core\DiseaseController@edit');
 $app->delete('departments/{id}', 'Core\DiseaseController@delete');

@@ -6,6 +6,7 @@ use App\Libraries\Repositories\Core\Contracts\InterfaceDepartmentRepository;
 use App\Libraries\Repositories\Core\BaseRepository;
 use App\Models\Core\Department;
 use App\Models\Core\Disease;
+use DB;
 
 class DepartmentRepository extends BaseRepository implements InterfaceDepartmentRepository {
 
@@ -14,7 +15,7 @@ class DepartmentRepository extends BaseRepository implements InterfaceDepartment
 
     public function __construct() {
         parent::__construct();
-        $this->mainTable = 'department';
+        $this->mainTable = 'departments';
         $this->diseaseTable = 'diseases';
         $this->diseaseMapTable = 'department_diseases';
     }
@@ -32,6 +33,7 @@ class DepartmentRepository extends BaseRepository implements InterfaceDepartment
 
             $model = new Department();
             $model->setId($record->id);
+            $model->setCode($record->code);
             $model->setName($record->name);
             $model->setDesc($record->desc);
 
@@ -54,6 +56,7 @@ class DepartmentRepository extends BaseRepository implements InterfaceDepartment
             foreach ($records as $record) {
                 $tempModel = new Department();
                 $tempModel->setId($record->id);
+                $tempModel->setCode($record->code);
                 $tempModel->setName($record->name);
                 $tempModel->setDesc($record->desc);
 
@@ -76,11 +79,20 @@ class DepartmentRepository extends BaseRepository implements InterfaceDepartment
         try {
             if (is_null($model->getId())) {
                 $id = DB::table($this->mainTable)
-                        ->insertGetId($model->toArray());
+                        ->insertGetId([
+                    'code' => $model->getCode(),
+                    'name' => $model->getName(),
+                    'desc' => $model->getDesc(),
+                ]);
                 $model->setId($id);
             } else {
                 DB::table($this->mainTable)
-                        ->update($model->toArray());
+                        ->where('id', $model->getId())
+                        ->update([
+                            'code' => $model->getCode(),
+                            'name' => $model->getName(),
+                            'desc' => $model->getDesc(),
+                ]);
             }
         } catch (Exception $ex) {
             throw $ex;
@@ -115,14 +127,15 @@ class DepartmentRepository extends BaseRepository implements InterfaceDepartment
             foreach ($records as $record) {
                 $dept = new Department();
                 $dept->setId($record->id);
+                $dept->setCode($record->code);
                 $dept->setName($record->name);
                 $dept->setDesc($record->desc);
-                
+
                 $disease = new Disease();
                 $disease->setId($record->disease_id);
                 $disease->setName($record->name);
                 $disease->setDesc($record->desc);
-                
+
                 $dept->addDisease($disease);
                 $models[] = $temp;
             }

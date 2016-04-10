@@ -17,6 +17,12 @@ class Department implements InterfaceModel {
      *
      * @var string 
      */
+    protected $code;
+
+    /**
+     *
+     * @var string 
+     */
     protected $name;
 
     /**
@@ -45,6 +51,22 @@ class Department implements InterfaceModel {
      */
     public function setId($id) {
         $this->id = $id;
+    }
+
+    /**
+     * 
+     * @return string
+     */
+    public function getCode() {
+        return $this->code;
+    }
+
+    /**
+     * 
+     * @param string $code
+     */
+    public function setCode($code) {
+        $this->code = $code;
     }
 
     /**
@@ -117,6 +139,7 @@ class Department implements InterfaceModel {
 
         return [
             'id' => $this->getId(),
+            'code' => $this->getCode(),
             'name' => $this->getName(),
             'desc' => $this->getDesc(),
             'diseases' => $diseases,
