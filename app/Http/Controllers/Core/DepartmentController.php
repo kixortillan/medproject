@@ -84,6 +84,8 @@ class DepartmentController extends Controller {
     public function delete(Request $request, $id) {
         try {
             $this->departmentRepo->delete($id);
+            
+            return response()->json();
         } catch (Exception $ex) {
             throw $ex;
         }
