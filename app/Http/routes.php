@@ -28,3 +28,6 @@ $app->get('departments/{id}/diseases/{diseaseId}', 'Core\DepartmentController@in
 $app->post('departments', 'Core\DepartmentController@store');
 $app->patch('departments/{id}', 'Core\DepartmentController@edit');
 $app->delete('departments/{id}', 'Core\DepartmentController@delete');
+
+$app->get('patients', 'Core\PatientController@index');
+$app->get('patients/{id}', 'Core\PatientController@index');

@@ -6,5 +6,9 @@ use Laravel\Lumen\Routing\Controller as BaseController;
 
 class Controller extends BaseController
 {
-    //
+    /**
+     *
+     * @var array 
+     */
+    protected $responseBag = [];
 }

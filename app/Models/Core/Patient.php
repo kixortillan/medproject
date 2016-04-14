@@ -139,9 +139,9 @@ class Patient implements InterfaceModel {
     }
 
     public function getFullname() {
-        if(empty($this->getMiddleName())){
+        if (empty($this->getMiddleName())) {
             return sprintf("%s %s", $this->getFirstName(), $this->getLastName());
-        }else{
+        } else {
             return sprintf("%s %s %s", $this->getFirstName(), $this->getMiddleName(), $this->getLastName());
         }
     }
@@ -149,7 +149,9 @@ class Patient implements InterfaceModel {
     public function toArray() {
         return [
             'id' => $this->getId(),
-            'f'
+            'full_name' => $this->getFullname(),
+            'postal_code' => $this->getPostalCode(),
+            'address' => $this->getAddress(),
         ];
     }
 

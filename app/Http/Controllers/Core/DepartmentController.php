@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Core;
 
 use App\Libraries\Repositories\Core\DepartmentRepository;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Core\Department;
+use Illuminate\Http\Request;
 use Exception;
 
 class DepartmentController extends Controller {

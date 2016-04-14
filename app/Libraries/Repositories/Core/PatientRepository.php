@@ -3,8 +3,10 @@
 namespace App\Libraries\Repositories\Core;
 
 use App\Libraries\Repositories\Core\Contracts\InterfacePatientRepository;
+use App\Libraries\Repositories\Core\Exceptions\PatientNotFoundException;
 use App\Libraries\Repositories\Core\BaseRepository;
 use App\Models\Core\Patient;
+use DB;
 
 class PatientRepository extends BaseRepository implements InterfacePatientRepository {
 
@@ -14,7 +16,21 @@ class PatientRepository extends BaseRepository implements InterfacePatientReposi
     }
 
     public function get($id) {
-        
+        $record = DB::table($this->mainTable)->find($id);
+
+        if ($record == null) {
+            throw new PatientNotFoundException();
+        }
+
+        $model = new Patient();
+        $model->setId($record->id);
+        $model->setFirstName($record->first_name);
+        $model->setMiddleName($record->middle_name);
+        $model->setLastName($record->last_name);
+        $model->setAddress($record->address);
+        $model->setPostalCode($record->postal_code);
+
+        return $model;
     }
 
     public function all() {
@@ -22,7 +38,7 @@ class PatientRepository extends BaseRepository implements InterfacePatientReposi
                 ->orderBy('created_at')
                 ->get();
 
-        $model = [];
+        $models = [];
         foreach ($records as $record) {
             $temp = new Patient;
             $temp->setId($record->id);
