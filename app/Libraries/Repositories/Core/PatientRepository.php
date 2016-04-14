@@ -19,7 +19,7 @@ class PatientRepository extends BaseRepository implements InterfacePatientReposi
 
     public function all() {
         $records = DB::table($this->mainTable)
-                ->orderBy('date_registered')
+                ->orderBy('created_at')
                 ->get();
 
         $model = [];
@@ -29,6 +29,8 @@ class PatientRepository extends BaseRepository implements InterfacePatientReposi
             $temp->setFirstName($record->first_name);
             $temp->setMiddleName($record->middle_name);
             $temp->setLastName($record->last_name);
+            $temp->setAddress($record->address);
+            $temp->setPostalCode($record->postal_code);
             $models[] = $temp;
         }
 

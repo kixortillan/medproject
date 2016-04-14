@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateDepartmentTable extends Migration
+class CreateSeverityControlsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,10 +12,9 @@ class CreateDepartmentTable extends Migration
      */
     public function up()
     {
-        Schema::create('departments', function (Blueprint $table) {
-            $table->increments('id')->unsigned();
-            $table->string('code', 10);
-            $table->string('name', 50);
+        Schema::create('severity_controls', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('type', 20);
             $table->string('desc', 60);
             $table->timestamps();
             $table->softDeletes();
@@ -29,6 +28,6 @@ class CreateDepartmentTable extends Migration
      */
     public function down()
     {
-        Schema::drop('departments');
+        Schema::drop('severity_controls');
     }
 }
