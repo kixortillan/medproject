@@ -16,7 +16,7 @@ class CreateDepartmentsTable extends Migration
             $table->increments('id')->unsigned();
             $table->string('code', 10);
             $table->string('name', 50);
-            $table->string('desc', 60);
+            $table->string('desc', 60)->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

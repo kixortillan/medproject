@@ -3,8 +3,9 @@
 namespace App\Models\Core;
 
 use App\Models\Contracts\InterfaceModel;
+use App\Models\BaseModel;
 
-class Patient implements InterfaceModel {
+class Patient extends BaseModel implements InterfaceModel {
 
     /**
      *
@@ -16,31 +17,37 @@ class Patient implements InterfaceModel {
      *
      * @var string 
      */
-    protected $firstName;
+    protected $firstName = '';
 
     /**
      *
      * @var string 
      */
-    protected $middleName;
+    protected $middleName = '';
 
     /**
      *
      * @var string 
      */
-    protected $lastName;
+    protected $lastName = '';
 
     /**
      *
      * @var string 
      */
-    protected $address;
+    protected $dateRegistered = '';
 
     /**
      *
      * @var string 
      */
-    protected $postalCode;
+    protected $address = '';
+
+    /**
+     *
+     * @var string 
+     */
+    protected $postalCode = '';
 
     /**
      * 
@@ -71,6 +78,10 @@ class Patient implements InterfaceModel {
      * @param string $firstName
      */
     public function setFirstName($firstName) {
+        if (is_null($firstName)) {
+            return;
+        }
+
         $this->firstName = $firstName;
     }
 
@@ -87,6 +98,10 @@ class Patient implements InterfaceModel {
      * @param string $middleName
      */
     public function setMiddleName($middleName) {
+        if (is_null($middleName)) {
+            return;
+        }
+
         $this->middleName = $middleName;
     }
 
@@ -103,7 +118,31 @@ class Patient implements InterfaceModel {
      * @param string $lastName
      */
     public function setLastName($lastName) {
+        if (is_null($lastName)) {
+            return;
+        }
+
         $this->lastName = $lastName;
+    }
+
+    /**
+     * 
+     * @return string
+     */
+    public function getDateRegistered() {
+        return $this->dateRegistered;
+    }
+
+    /**
+     * 
+     * @param string $date
+     */
+    public function setDateRegistered($date) {
+        if (is_null($date)) {
+            return;
+        }
+
+        $this->dateRegistered = $date;
     }
 
     /**
@@ -119,6 +158,10 @@ class Patient implements InterfaceModel {
      * @param string $address
      */
     public function setAddress($address) {
+        if (is_null($address)) {
+            return;
+        }
+
         $this->address = $address;
     }
 
@@ -135,9 +178,17 @@ class Patient implements InterfaceModel {
      * @param string $postalCode
      */
     public function setPostalCode($postalCode) {
+        if (is_null($postalCode)) {
+            return;
+        }
+
         $this->postalCode = $postalCode;
     }
 
+    /**
+     * 
+     * @return string
+     */
     public function getFullname() {
         if (empty($this->getMiddleName())) {
             return sprintf("%s %s", $this->getFirstName(), $this->getLastName());
@@ -150,6 +201,7 @@ class Patient implements InterfaceModel {
         return [
             'id' => $this->getId(),
             'full_name' => $this->getFullname(),
+            'date_registered' => $this->getDateRegistered(),
             'postal_code' => $this->getPostalCode(),
             'address' => $this->getAddress(),
         ];

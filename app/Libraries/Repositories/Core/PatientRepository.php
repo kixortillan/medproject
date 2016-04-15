@@ -27,6 +27,7 @@ class PatientRepository extends BaseRepository implements InterfacePatientReposi
         $model->setFirstName($record->first_name);
         $model->setMiddleName($record->middle_name);
         $model->setLastName($record->last_name);
+        $model->setDateRegistered($record->created_at);
         $model->setAddress($record->address);
         $model->setPostalCode($record->postal_code);
 
@@ -45,6 +46,7 @@ class PatientRepository extends BaseRepository implements InterfacePatientReposi
             $temp->setFirstName($record->first_name);
             $temp->setMiddleName($record->middle_name);
             $temp->setLastName($record->last_name);
+            $temp->setDateRegistered($record->created_at);
             $temp->setAddress($record->address);
             $temp->setPostalCode($record->postal_code);
             $models[] = $temp;
@@ -53,8 +55,32 @@ class PatientRepository extends BaseRepository implements InterfacePatientReposi
         return $models;
     }
 
-    public function save(Patient $patient) {
-        
+    public function save(Patient $model) {
+        try {
+            if (is_null($model->getId())) {
+                $id = DB::table($this->mainTable)
+                        ->insertGetId([
+                    'first_name' => $model->getFirstName(),
+                    'middle_name' => $model->getMiddleName(),
+                    'last_name' => $model->getLastName(),
+                    'created_at' => date('Y-m-d H:i:s'),
+                ]);
+                $model->setId($id);
+            } else {
+                DB::table($this->mainTable)
+                        ->where('id', $model->getId())
+                        ->update([
+                            'first_name' => $model->getFirstName(),
+                            'middle_name' => $model->getMiddleName(),
+                            'last_name' => $model->getLastName(),
+                            'updated_at' => date('Y-m-d H:i:s')
+                ]);
+            }
+        } catch (Exception $ex) {
+            throw $ex;
+        }
+
+        return $model;
     }
 
 }

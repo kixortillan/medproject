@@ -15,7 +15,7 @@ class CreateSymptomsTable extends Migration
         Schema::create('symptoms', function (Blueprint $table) {
             $table->bigIncrements('id')->unsigned();
             $table->string('code', 20);
-            $table->text('desc');
+            $table->text('desc')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

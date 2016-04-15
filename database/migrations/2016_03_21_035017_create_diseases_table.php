@@ -15,7 +15,7 @@ class CreateDiseasesTable extends Migration
         Schema::create('diseases', function (Blueprint $table) {
             $table->bigIncrements('id')->unsigned();
             $table->string('name', 50);
-            $table->text('desc');
+            $table->text('desc')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

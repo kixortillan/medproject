@@ -31,3 +31,6 @@ $app->delete('departments/{id}', 'Core\DepartmentController@delete');
 
 $app->get('patients', 'Core\PatientController@index');
 $app->get('patients/{id}', 'Core\PatientController@index');
+$app->post('patients', 'Core\PatientController@store');
+$app->patch('patients/{id}', 'Core\PatientController@edit');
+$app->delete('patients/{id}', 'Core\PatientController@delete');
