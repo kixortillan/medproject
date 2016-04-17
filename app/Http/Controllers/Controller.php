@@ -65,4 +65,14 @@ class Controller extends BaseController {
         return $this->responseBag;
     }
 
+    /**
+     * 
+     * @param type $key
+     * @param type $value
+     * @return type
+     */
+    protected function addItem($key, $value) {
+        $this->responseBag[$key] = $value;
+    }
+
 }

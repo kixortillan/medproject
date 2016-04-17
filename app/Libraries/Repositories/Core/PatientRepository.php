@@ -34,10 +34,19 @@ class PatientRepository extends BaseRepository implements InterfacePatientReposi
         return $model;
     }
 
-    public function all() {
-        $records = DB::table($this->mainTable)
-                ->orderBy('created_at')
-                ->get();
+    public function all($offset = 0, $limit = 0) {
+        $query = DB::table($this->mainTable)
+                ->orderBy('created_at');
+
+        if ($offset > 0) {
+            $query->offset($offset);
+        }
+
+        if ($limit > 0) {
+            $query->limit($limit);
+        }
+
+        $records = $query->get();
 
         $models = [];
         foreach ($records as $record) {
@@ -53,6 +62,16 @@ class PatientRepository extends BaseRepository implements InterfacePatientReposi
         }
 
         return $models;
+    }
+
+    public function count() {
+        try {
+            return DB::table($this->mainTable)
+                            ->whereNull('deleted_at')
+                            ->count();
+        } catch (Exception $ex) {
+            throw $ex;
+        }
     }
 
     public function save(Patient $model) {

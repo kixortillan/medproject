@@ -21,9 +21,15 @@ class PatientController extends Controller {
             if (!is_null($id)) {
                 $this->setData($this->patientRepo->get($id)->toArray());
             } else {
-                foreach ($this->patientRepo->all() as $model) {
+                $pageNum = $request->query('page', 1);
+                $limit = $request->query('item_per_page', 5);
+
+                foreach ($this->patientRepo->all(($pageNum - 1) * $limit, $limit) as $model) {
                     $this->setData($model->toArray());
                 }
+
+                $this->addItem('total', ceil($this->patientRepo->count() / $limit));
+                $this->addItem('items_per_page', $limit);
             }
             $this->setType(Patient::getModelName());
         } catch (Exception $ex) {
