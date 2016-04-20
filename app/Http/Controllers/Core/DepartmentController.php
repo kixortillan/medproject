@@ -45,10 +45,16 @@ class DepartmentController extends Controller {
     }
 
     public function store(Request $request) {
+        $code = $request->get('code', null);
+        $name = $request->get('name', null);
+        $desc = $request->get('desc', null);
+
         try {
-            $code = $request->get('code', null);
-            $name = $request->get('name', null);
-            $desc = $request->get('desc', null);
+            $this->validate($request, [
+                'code' => 'bail|required|alphanum',
+                'name' => 'bail|required|alphanum',
+                'desc' => 'bail|alphanum'
+            ]);
         } catch (Exception $ex) {
             throw $ex;
         }
@@ -68,10 +74,16 @@ class DepartmentController extends Controller {
     }
 
     public function edit(Request $request, $id) {
+        $code = $request->get('code', null);
+        $name = $request->get('name', null);
+        $desc = $request->get('desc', null);
+
         try {
-            $code = $request->get('code', null);
-            $name = $request->get('name', null);
-            $desc = $request->get('desc', null);
+            $this->validate($request, [
+                'code' => 'bail|required|alphanum',
+                'name' => 'bail|required|alphanum',
+                'desc' => 'bail|alphanum'
+            ]);
         } catch (Exception $ex) {
             throw $ex;
         }
