@@ -48,9 +48,19 @@ class DepartmentRepository extends BaseRepository implements InterfaceDepartment
      * @return Department
      * @throws \App\Libraries\Repositories\Core\Exception
      */
-    public function all() {
+    public function all($limit = null, $offset = null) {
         try {
-            $records = DB::table($this->mainTable)->get();
+            $query = DB::table($this->mainTable);
+
+            if (isset($limit)) {
+                $query->limit($limit);
+            }
+
+            if (isset($offset)) {
+                $query->skip($offset);
+            }
+
+            $records = $query->get();
 
             $models = [];
             foreach ($records as $record) {
@@ -64,6 +74,21 @@ class DepartmentRepository extends BaseRepository implements InterfaceDepartment
             }
 
             return $models;
+        } catch (Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    /**
+     * 
+     * @return int
+     * @throws \App\Libraries\Repositories\Core\Exception
+     */
+    public function count() {
+        try {
+            return DB::table($this->mainTable)
+                            ->whereNull('deleted_at')
+                            ->count();
         } catch (Exception $ex) {
             throw $ex;
         }

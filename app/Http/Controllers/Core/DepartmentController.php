@@ -19,20 +19,29 @@ class DepartmentController extends Controller {
     public function index(Request $request, $id = null) {
         try {
             if ($id != null) {
-                $this->departmentRepo->get($id);
+                $this->setData($this->departmentRepo->get($id)->toArray());
             } else {
-                $models = $this->departmentRepo->all();
+                $page = $request->query('page', 1);
+                $limit = $request->query('per_page', 5);
 
-                $response = [];
+                $models = $this->departmentRepo->all($limit, $limit * ($page - 1));
+
+                $departments = [];
                 foreach ($models as $model) {
-                    $response[] = $model->toArray();
+                    $departments[] = $model->toArray();
                 }
 
-                return response()->json($response);
+                $this->setData('departments', $departments);
+                $this->addItem('total', ceil($this->departmentRepo->count() / $limit));
+                $this->addItem('per_page', $limit);
             }
+
+            $this->setType(Department::getModelName());
         } catch (Exception $ex) {
             throw $ex;
         }
+
+        return response()->json($this->getResponseBag());
     }
 
     public function store(Request $request) {
@@ -84,7 +93,7 @@ class DepartmentController extends Controller {
     public function delete(Request $request, $id) {
         try {
             $this->departmentRepo->delete($id);
-            
+
             return response()->json();
         } catch (Exception $ex) {
             throw $ex;

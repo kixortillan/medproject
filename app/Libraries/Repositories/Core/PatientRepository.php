@@ -34,16 +34,16 @@ class PatientRepository extends BaseRepository implements InterfacePatientReposi
         return $model;
     }
 
-    public function all($offset = 0, $limit = 0) {
+    public function all($limit = null, $offset = null) {
         $query = DB::table($this->mainTable)
                 ->orderBy('created_at');
 
-        if ($offset > 0) {
-            $query->offset($offset);
+        if (isset($limit)) {
+            $query->limit($limit);
         }
 
-        if ($limit > 0) {
-            $query->limit($limit);
+        if (isset($offset)) {
+            $query->skip($offset);
         }
 
         $records = $query->get();
@@ -64,6 +64,11 @@ class PatientRepository extends BaseRepository implements InterfacePatientReposi
         return $models;
     }
 
+    /**
+     * 
+     * @return int
+     * @throws \App\Libraries\Repositories\Core\Exception
+     */
     public function count() {
         try {
             return DB::table($this->mainTable)

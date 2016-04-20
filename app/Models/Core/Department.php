@@ -4,8 +4,9 @@ namespace App\Models\Core;
 
 use App\Models\Contracts\InterfaceModel;
 use App\Models\Core\Disease;
+use App\Models\BaseModel;
 
-class Department implements InterfaceModel {
+class Department extends BaseModel implements InterfaceModel {
 
     /**
      *

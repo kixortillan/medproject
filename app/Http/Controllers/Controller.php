@@ -17,15 +17,11 @@ class Controller extends BaseController {
 
     /**
      * 
-     * @param mixed $data
-     * @return 
+     * @param type $key
+     * @param type $value
      */
-    protected function setData($data) {
-        if (is_null($data)) {
-            return;
-        }
-
-        $this->responseBag['data'][] = $data;
+    protected function setData($key, $value) {
+        $this->responseBag['data'][$key] = $value;
     }
 
     /**

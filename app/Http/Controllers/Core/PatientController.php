@@ -19,17 +19,19 @@ class PatientController extends Controller {
     public function index(Request $request, $id = null) {
         try {
             if (!is_null($id)) {
-                $this->setData($this->patientRepo->get($id)->toArray());
+                $this->setData('patient', $this->patientRepo->get($id)->toArray());
             } else {
-                $pageNum = $request->query('page', 1);
-                $limit = $request->query('item_per_page', 5);
+                $page = $request->query('page', 1);
+                $limit = $request->query('per_page', 5);
 
-                foreach ($this->patientRepo->all(($pageNum - 1) * $limit, $limit) as $model) {
-                    $this->setData($model->toArray());
+                $patients = [];
+                foreach ($this->patientRepo->all($limit, $limit * ($page - 1)) as $model) {
+                    $patients[] = $model->toArray();
                 }
 
+                $this->setData('patients', $patients);
                 $this->addItem('total', ceil($this->patientRepo->count() / $limit));
-                $this->addItem('items_per_page', $limit);
+                $this->addItem('per_page', $limit);
             }
             $this->setType(Patient::getModelName());
         } catch (Exception $ex) {
@@ -40,17 +42,27 @@ class PatientController extends Controller {
     }
 
     public function store(Request $request) {
+        $firstName = $request->input('first_name', null);
+        $middleName = $request->input('middle_name', null);
+        $lastName = $request->input('last_name', null);
+
         try {
-            $firstName = $request->input('first_name', null);
-            $middleName = $request->input('middle_name', null);
-            $lastName = $request->input('last_name', null);
+            $this->validate($request, [
+                'first_name' => 'bail|required|alpha',
+                'middle_name' => 'bail|alpha',
+                'last_name' => 'bail|required|alpha',
+            ]);
+        } catch (Exception $ex) {
+            throw $ex;
+        }
 
+        try {
             $patient = new Patient();
-            $patient->setFirstName($firstName);
-            $patient->setMiddleName($middleName);
-            $patient->setLastName($lastName);
+            $patient->setFirstName(ucwords($firstName));
+            $patient->setMiddleName(ucwords($middleName));
+            $patient->setLastName(ucwords($lastName));
 
-            $this->setData($this->patientRepo->save($patient)->toArray());
+            $this->setData('patient', $this->patientRepo->save($patient)->toArray());
             $this->setType(Patient::getModelName());
 
             return response()->json($this->getResponseBag());
