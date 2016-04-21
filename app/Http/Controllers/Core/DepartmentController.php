@@ -21,10 +21,15 @@ class DepartmentController extends Controller {
             if ($id != null) {
                 $this->setData($this->departmentRepo->get($id)->toArray());
             } else {
-                $page = $request->query('page', 1);
+                $search = $request->query('search', null);
+                $page = $request->query('page', null);
                 $limit = $request->query('per_page', 5);
 
-                $models = $this->departmentRepo->all($limit, $limit * ($page - 1));
+                if ($page == null) {
+                    $models = $this->departmentRepo->all();
+                } else {
+                    $models = $this->departmentRepo->all($limit, $limit * ($page - 1));
+                }
 
                 $departments = [];
                 foreach ($models as $model) {
@@ -51,9 +56,9 @@ class DepartmentController extends Controller {
 
         try {
             $this->validate($request, [
-                'code' => 'bail|required|alphanum',
-                'name' => 'bail|required|alphanum',
-                'desc' => 'bail|alphanum'
+                'code' => 'bail|required|alpha_num',
+                'name' => 'bail|required|alpha_num',
+                'desc' => 'bail|alpha_num'
             ]);
         } catch (Exception $ex) {
             throw $ex;

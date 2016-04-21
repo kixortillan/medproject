@@ -16,7 +16,6 @@ class CreateMedicalCaseDepartments extends Migration
             $table->bigIncrements('id');
             $table->bigInteger('medical_case_id');
             $table->bigInteger('department_id');
-            $table->string('status', 5);
             $table->timestamps();
             $table->softDeletes();
         });

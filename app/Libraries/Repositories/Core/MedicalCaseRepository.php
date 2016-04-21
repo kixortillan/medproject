@@ -9,9 +9,14 @@ use DB;
 
 class MedicalCaseRepository extends BaseRepository implements InterfaceMedicalCaseRepository {
 
+    protected $mapDeptsTable;
+    protected $mapPatientsTable;
+
     public function __construct() {
         parent::__construct();
         $this->mainTable = "medical_cases";
+        $this->mapDeptsTable = "medical_case_departments";
+        $this->mapPatientsTable = "medical_case_patients";
     }
 
     public function get() {
@@ -44,7 +49,38 @@ class MedicalCaseRepository extends BaseRepository implements InterfaceMedicalCa
     }
 
     public function save(MedicalCase $medicalCase) {
-        
+        $id = DB::table($this->mainTable)->insertGetId([
+            'serial_num' => $medicalCase->getSerialNum(),
+            'created_at' => date('Y-m-d H:i:s'),
+        ]);
+
+        $medicalCase->setId($id);
+
+        $insertMedCaseDept = [];
+
+        foreach ($medicalCase->getDepartments() as $item) {
+            $insertMedCaseDept[] = [
+                'medical_case_id' => $medicalCase->getId(),
+                'department_id' => $item->getId(),
+            ];
+        }
+
+        DB::table($this->mapDeptsTable)
+                ->insert($insertMedCaseDept);
+
+        $insertMedCasePatients = [];
+
+        foreach ($medicalCase->getPatients() as $item) {
+            $insertMedCasePatients[] = [
+                'medical_case_id' => $medicalCase->getId(),
+                'patient_id' => $item->getId(),
+            ];
+        }
+
+        DB::table($this->mapPatientsTable)
+                ->insert($insertMedCasePatients);
+
+        return $medicalCase;
     }
 
 }

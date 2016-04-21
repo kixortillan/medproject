@@ -14,7 +14,7 @@ class CreateMedicalCasesTable extends Migration
     {
         Schema::create('medical_cases', function (Blueprint $table) {
             $table->bigIncrements('id')->unsigned();
-            $table->text('serial_no');
+            $table->text('serial_num');
             $table->timestamps();
             $table->softDeletes();
         });
