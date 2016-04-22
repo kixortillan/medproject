@@ -13,7 +13,7 @@ class DepartmentSeeder extends Seeder {
         $faker = Faker\Factory::create();
 
         $insertValues = [];
-        for ($i = 0; $i < 100000; $i++) {
+        for ($i = 0; $i < 500; $i++) {
             $insertValues[] = [
                 'code' => $faker->word,
                 'name' => $faker->word,
@@ -21,7 +21,7 @@ class DepartmentSeeder extends Seeder {
                 'created_at' => $faker->dateTimeThisDecade
             ];
 
-            if (count($insertValues) > 10000) {
+            if (count($insertValues) > 100) {
                 DB::table('departments')
                         ->insert($insertValues);
                 $insertValues = [];

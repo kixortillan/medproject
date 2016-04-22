@@ -23,6 +23,7 @@ $app->delete('diseases/{id}', 'Core\DiseaseController@delete');
 
 $app->get('departments', 'Core\DepartmentController@index');
 $app->get('departments/{id}', 'Core\DepartmentController@index');
+//$app->get('departments/search', 'Core\DepartmentController@search');
 $app->get('departments/{id}/diseases', 'Core\DepartmentController@index');
 $app->get('departments/{id}/diseases/{diseaseId}', 'Core\DepartmentController@index');
 $app->post('departments', 'Core\DepartmentController@store');

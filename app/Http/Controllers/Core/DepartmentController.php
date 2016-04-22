@@ -17,34 +17,37 @@ class DepartmentController extends Controller {
     }
 
     public function index(Request $request, $id = null) {
-        try {
-            if ($id != null) {
-                $this->setData($this->departmentRepo->get($id)->toArray());
-            } else {
-                $search = $request->query('search', null);
-                $page = $request->query('page', null);
-                $limit = $request->query('per_page', 5);
+        if ($id != null) {
+            $this->setData($this->departmentRepo->get($id)->toArray());
+        } else {
+            $page = $request->query('page', 1);
+            $limit = $request->query('per_page', 5);
 
-                if ($page == null) {
-                    $models = $this->departmentRepo->all();
-                } else {
-                    $models = $this->departmentRepo->all($limit, $limit * ($page - 1));
-                }
+            $this->validate($request, [
+                'page' => 'bail|numeric',
+                'per_page' => 'bail|numeric',
+            ]);
 
-                $departments = [];
-                foreach ($models as $model) {
-                    $departments[] = $model->toArray();
-                }
+            $offset = $limit * ($page - 1);
 
-                $this->setData('departments', $departments);
-                $this->addItem('total', ceil($this->departmentRepo->count() / $limit));
-                $this->addItem('per_page', $limit);
+            if ($limit == -1) {
+                $limit = null;
+                $offset = null;
             }
 
-            $this->setType(Department::getModelName());
-        } catch (Exception $ex) {
-            throw $ex;
+            $models = $this->departmentRepo->all($limit, $offset);
+
+            $departments = [];
+            foreach ($models as $model) {
+                $departments[] = $model->toArray();
+            }
+
+            $this->setData('departments', $departments);
+            $this->addItem('total', ceil($this->departmentRepo->count()));
+            $this->addItem('per_page', $limit);
         }
+
+        $this->setType(Department::getModelName());
 
         return response()->json($this->getResponseBag());
     }
@@ -119,6 +122,34 @@ class DepartmentController extends Controller {
 
     public function getWithDiseases(Request $request, $id, $diseaseId = null) {
         
+    }
+
+    public function search(Request $request) {
+        $search = $request->query('keyword', null);
+
+        try {
+            $this->validate($request, [
+                'keyword' => 'bail|required|min:1'
+            ]);
+        } catch (Exception $ex) {
+            throw $ex;
+        }
+
+        try {
+            $models = $this->departmentRepo
+                    ->search(['code', 'name', 'desc'], $search);
+
+            $departments = [];
+            foreach ($models as $dept) {
+                $departments[] = $dept->toArray();
+            }
+
+            $this->setData('departments', $departments);
+        } catch (Exception $ex) {
+            throw $ex;
+        }
+
+        return response()->json($this->getResponseBag());
     }
 
 }

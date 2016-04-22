@@ -141,6 +141,11 @@ class DepartmentRepository extends BaseRepository implements InterfaceDepartment
         }
     }
 
+    /**
+     * 
+     * @return type
+     * @throws \App\Libraries\Repositories\Core\Exception
+     */
     public function withDisease() {
         try {
             $records = DB::table($this->mainTable)
@@ -169,6 +174,29 @@ class DepartmentRepository extends BaseRepository implements InterfaceDepartment
         } catch (Exception $ex) {
             throw $ex;
         }
+    }
+
+    public function search($columns = [], $keyword) {
+        $query = DB::table($this->mainTable);
+
+        foreach ($columns as $col) {
+            $query->orWhere($col, "LIKE", "%{$keyword}%");
+        }
+
+        $records = $query->limit(50)->get();
+
+        $models = [];
+        foreach ($records as $record) {
+            $temp = new Department();
+            $temp->setId($record->id);
+            $temp->setName($record->name);
+            $temp->setCode($record->code);
+            $temp->setDesc($record->desc);
+
+            $models[] = $temp;
+        }
+
+        return $models;
     }
 
 }
