@@ -31,6 +31,12 @@ class MedicalCase implements InterfaceModel {
     protected $patients = [];
 
     /**
+     *
+     * @var type 
+     */
+    protected $diagnoses = [];
+
+    /**
      * 
      * @return int
      */
@@ -92,6 +98,22 @@ class MedicalCase implements InterfaceModel {
      */
     public function addPatient(Patient $patient) {
         $this->patients[] = $patient;
+    }
+
+    /**
+     * 
+     * @return array
+     */
+    public function getDiagnoses() {
+        return $this->diagnoses;
+    }
+
+    /**
+     * 
+     * @param \App\Models\Core\Diagnosis $diagnosis
+     */
+    public function addDiagnoses(Diagnosis $diagnosis) {
+        $this->diagnoses[] = $diagnosis;
     }
 
     /**

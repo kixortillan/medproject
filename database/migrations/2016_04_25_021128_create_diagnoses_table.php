@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateMedicalCaseDiseaseHistoryTable extends Migration
+class CreateDiagnosesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,9 +12,10 @@ class CreateMedicalCaseDiseaseHistoryTable extends Migration
      */
     public function up()
     {
-        Schema::create('medical_case_disease_history', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->bigInteger('medical_case');
+        Schema::create('diagnoses', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name', 60);
+            $table->text('desc');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -27,6 +28,6 @@ class CreateMedicalCaseDiseaseHistoryTable extends Migration
      */
     public function down()
     {
-        Schema::drop('medical_case_disease_history');
+        Schema::drop('diagnoses');
     }
 }
