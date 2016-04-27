@@ -129,7 +129,7 @@ class DepartmentController extends Controller {
 
         try {
             $this->validate($request, [
-                'keyword' => 'bail|required|min:1'
+                'keyword' => 'required'
             ]);
         } catch (Exception $ex) {
             throw $ex;

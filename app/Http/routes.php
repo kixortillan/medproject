@@ -35,3 +35,9 @@ $app->get('patients/{id}', 'Core\PatientController@index');
 $app->post('patients', 'Core\PatientController@store');
 $app->patch('patients/{id}', 'Core\PatientController@edit');
 $app->delete('patients/{id}', 'Core\PatientController@delete');
+
+$app->get('cases', 'Core\MedicalCaseController@index');
+$app->get('cases/{id}', 'Core\MedicalCaseController@index');
+$app->post('cases', 'Core\MedicalCaseController@store');
+
+$app->get('search/diagnoses', 'Core\DiagnosisController@search');

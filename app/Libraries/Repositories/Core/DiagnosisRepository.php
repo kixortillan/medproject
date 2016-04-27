@@ -8,6 +8,11 @@ use DB;
 
 class DiagnosisRepository extends BaseRepository {
 
+    public function __construct() {
+        parent::__construct();
+        $this->mainTable = 'diagnoses';
+    }
+
     public function get($id) {
         try {
             $record = DB::table($this->mainTable)->where('id', $id)
@@ -29,7 +34,6 @@ class DiagnosisRepository extends BaseRepository {
             if (is_null($diagnosis->getId())) {
                 $id = DB::table($this->mainTable)
                         ->insertGetId([
-                    'code' => $diagnosis->getCode(),
                     'name' => $diagnosis->getName(),
                     'desc' => $diagnosis->getDesc(),
                 ]);
@@ -38,7 +42,6 @@ class DiagnosisRepository extends BaseRepository {
                 DB::table($this->mainTable)
                         ->where('id', $diagnosis->getId())
                         ->update([
-                            'code' => $diagnosis->getCode(),
                             'name' => $diagnosis->getName(),
                             'desc' => $diagnosis->getDesc(),
                 ]);
@@ -49,8 +52,8 @@ class DiagnosisRepository extends BaseRepository {
 
         return $diagnosis;
     }
-    
-    public function search($columns = [], $keyword){
+
+    public function search($columns = [], $keyword) {
         $query = DB::table($this->mainTable);
 
         foreach ($columns as $col) {

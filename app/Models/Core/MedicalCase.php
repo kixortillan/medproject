@@ -128,7 +128,12 @@ class MedicalCase implements InterfaceModel {
 
         $patients = [];
         foreach ($this->getPatients() as $val) {
-            $patients[] = $val;
+            $patients[] = $val->toArray();
+        }
+        
+        $diagnoses = [];
+        foreach ($this->getDiagnoses() as $val){
+            $diagnoses[] = $val->toArray();
         }
 
         return [
@@ -136,6 +141,7 @@ class MedicalCase implements InterfaceModel {
             'serial_num' => $this->getSerialNum(),
             'departments' => $dept,
             'patients' => $patients,
+            'diagnoses' => $diagnoses,
         ];
     }
 

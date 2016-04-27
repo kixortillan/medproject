@@ -11,12 +11,14 @@ class MedicalCaseRepository extends BaseRepository implements InterfaceMedicalCa
 
     protected $mapDeptsTable;
     protected $mapPatientsTable;
+    protected $mapDiagnosesTable;
 
     public function __construct() {
         parent::__construct();
         $this->mainTable = "medical_cases";
         $this->mapDeptsTable = "medical_case_departments";
         $this->mapPatientsTable = "medical_case_patients";
+        $this->mapDiagnosesTable = "medical_case_diagnoses";
     }
 
     public function get() {
@@ -80,7 +82,19 @@ class MedicalCaseRepository extends BaseRepository implements InterfaceMedicalCa
         DB::table($this->mapPatientsTable)
                 ->insert($insertMedCasePatients);
 
+        $insertMedCaseDiagnoses = [];
+
+        foreach ($medicalCase->getDiagnoses() as $item) {
+            $insertMedCaseDiagnoses[] = [
+                'medical_case_id' => $medicalCase->getId(),
+                'diagnosis_id' => $item->getId(),
+            ];
+        }
+
+        DB::table($this->mapDiagnosesTable)
+                ->insert($insertMedCaseDiagnoses);
+
         return $medicalCase;
     }
-
+    
 }

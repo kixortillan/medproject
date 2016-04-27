@@ -53,7 +53,7 @@ class Diagnosis implements InterfaceModel {
      * @param string $name
      */
     public function setName($name) {
-        $this->name = $name;
+        $this->name = strtoupper($name);
     }
 
     /**
@@ -78,6 +78,9 @@ class Diagnosis implements InterfaceModel {
      */
     public function toArray() {
         return [
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'desc' => $this->getDesc(),
         ];
     }
 

@@ -8,6 +8,7 @@ use App\Libraries\Repositories\Core\DiagnosisRepository;
 use App\Libraries\Repositories\Core\PatientRepository;
 use App\Http\Controllers\Controller;
 use App\Models\Core\MedicalCase;
+use App\Models\Core\Diagnosis;
 use Illuminate\Http\Request;
 use Exception;
 
@@ -18,15 +19,21 @@ class MedicalCaseController extends Controller {
     protected $patientRepo;
     protected $diagnosisRepo;
 
-    public function __construc() {
+    public function __construct() {
         $this->medicalCaseRepo = new MedicalCaseRepository();
         $this->deptRepo = new DepartmentRepository();
         $this->patientRepo = new PatientRepository();
         $this->diagnosisRepo = new DiagnosisRepository();
     }
 
-    public function index() {
+    public function index(Request $request, $id = null) {
+        if (is_null($id)) {
+            $model = $this->medicalCaseRepo->get($id);
+        } else {
+            $this->medicalCaseRepo->all();
+        }
         
+        return response()->json($this->getResponseBag());
     }
 
     public function store(Request $request) {
@@ -38,8 +45,8 @@ class MedicalCaseController extends Controller {
         try {
             $this->validate($request, [
                 'serial_num' => 'bail|required|alpha_num',
-                'patient_id' => 'bail|required|numeric|array',
-                'department_id' => 'bail|required|numeric|array',
+                'patient_id' => 'bail|required|array',
+                'department_id' => 'bail|required|array',
                 'diagnosis' => 'bail|array',
             ]);
         } catch (Exception $ex) {
@@ -58,11 +65,16 @@ class MedicalCaseController extends Controller {
         }
 
         foreach ($diagnosis as $val) {
-            $matchedDiagnosis = $this->diagnosisRepo->search(['name' => $val]);
+            $matchedDiagnosis = $this->diagnosisRepo->search(['name'], $val);
+
             if (empty($matchedDiagnosis)) {
-                $this->diagnosisRepo->save((new \App\Models\Core\Diagnosis)->setName($diagnosis));
+                $newDiagnosis = new Diagnosis();
+                $newDiagnosis->setName($val);
+                $toAddDiagnosis = $this->diagnosisRepo->save($newDiagnosis);
+            } else {
+                $toAddDiagnosis = head($matchedDiagnosis);
             }
-            $medicalCase->addDiagnoses(head($models));
+            $medicalCase->addDiagnoses($toAddDiagnosis);
         }
 
         $medicalCase = $this->medicalCaseRepo->save($medicalCase);
