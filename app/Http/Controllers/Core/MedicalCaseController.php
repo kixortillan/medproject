@@ -8,6 +8,7 @@ use App\Libraries\Repositories\Core\DiagnosisRepository;
 use App\Libraries\Repositories\Core\PatientRepository;
 use App\Http\Controllers\Controller;
 use App\Models\Core\MedicalCase;
+use App\Models\Core\Department;
 use App\Models\Core\Diagnosis;
 use Illuminate\Http\Request;
 use Exception;
@@ -32,21 +33,21 @@ class MedicalCaseController extends Controller {
         } else {
             $this->medicalCaseRepo->all();
         }
-        
+
         return response()->json($this->getResponseBag());
     }
 
     public function store(Request $request) {
         $serialNum = $request->input('serial_num', null);
         $patientId = $request->input('patient_id', null);
-        $departmentId = $request->input('department_id', null);
+        $departments = $request->input('departments', null);
         $diagnosis = $request->input('diagnosis');
 
         try {
             $this->validate($request, [
-                'serial_num' => 'bail|required|alpha_num',
+                'serial_num' => 'bail|required',
                 'patient_id' => 'bail|required|array',
-                'department_id' => 'bail|required|array',
+                'departments' => 'bail|required|array',
                 'diagnosis' => 'bail|array',
             ]);
         } catch (Exception $ex) {
@@ -56,8 +57,17 @@ class MedicalCaseController extends Controller {
         $medicalCase = new MedicalCase();
         $medicalCase->setSerialNum($serialNum);
 
-        foreach ($departmentId as $val) {
-            $medicalCase->addDepartment($this->deptRepo->get($val));
+        foreach ($departments as $val) {
+            $matchedDepartment = $this->deptRepo->search(['name'], $val);
+
+            if (empty($matchedDepartment)) {
+                $newDepartment = new Department();
+                $newDepartment->setName($val);
+                $toAddDepartment = $this->deptRepo->save($newDepartment);
+            } else {
+                $toAddDepartment = head($matchedDepartment);
+            }
+            $medicalCase->addDepartment($toAddDepartment);
         }
 
         foreach ($patientId as $val) {
