@@ -180,7 +180,7 @@ class DepartmentRepository extends BaseRepository implements InterfaceDepartment
         $query = DB::table($this->mainTable);
 
         foreach ($columns as $col) {
-            $query->orWhere($col, "LIKE", "%{$keyword}%");
+            $query->orWhere($col, "like", "%{$keyword}%");
         }
 
         $records = $query->limit(50)->get();

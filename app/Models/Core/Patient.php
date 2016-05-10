@@ -193,13 +193,22 @@ class Patient extends BaseModel implements InterfaceModel {
         if (empty($this->getMiddleName())) {
             return sprintf("%s %s", $this->getFirstName(), $this->getLastName());
         } else {
-            return sprintf("%s %s %s", $this->getFirstName(), $this->getMiddleName(), $this->getLastName());
+            $parsedMiddleName = explode(" ", $this->getMiddleName());
+            $middleInitial = "";
+            foreach ($parsedMiddleName as $key => $value){
+                $middleInitial .= substr($value, 0, 1) . ".";
+            }
+            
+            return sprintf("%s %s %s", $this->getFirstName(), $middleInitial, $this->getLastName());
         }
     }
 
     public function toArray() {
         return [
             'id' => $this->getId(),
+            'first_name' => $this->getFirstName(),
+            'middle_name' => $this->getMiddleName(),
+            'last_name' => $this->getLastName(),
             'full_name' => $this->getFullname(),
             'date_registered' => $this->getDateRegistered(),
             'postal_code' => $this->getPostalCode(),
