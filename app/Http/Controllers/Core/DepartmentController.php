@@ -18,7 +18,7 @@ class DepartmentController extends Controller {
 
     public function index(Request $request, $id = null) {
         if ($id != null) {
-            $this->setData($this->departmentRepo->get($id)->toArray());
+            $this->setData('department', $this->departmentRepo->get($id)->toArray());
         } else {
             $page = $request->query('page', 1);
             $limit = $request->query('per_page', 5);
