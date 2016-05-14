@@ -13,11 +13,10 @@ class CreateMedicalCaseDiagnosesTable extends Migration
     public function up()
     {
         Schema::create('medical_case_diagnoses', function (Blueprint $table) {
-            $table->bigIncrements('id');
             $table->bigInteger('medical_case_id');
             $table->bigInteger('diagnosis_id');
+            $table->primary(['medical_case_id', 'diagnosis_id']);
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

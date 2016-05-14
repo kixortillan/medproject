@@ -13,11 +13,10 @@ class CreateMedicalCaseDepartments extends Migration
     public function up()
     {
         Schema::create('medical_case_departments', function (Blueprint $table) {
-            $table->bigIncrements('id');
             $table->bigInteger('medical_case_id');
             $table->bigInteger('department_id');
+            $table->primary(['medical_case_id', 'department_id']);
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

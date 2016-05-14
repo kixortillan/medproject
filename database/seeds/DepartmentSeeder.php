@@ -24,7 +24,7 @@ class DepartmentSeeder extends Seeder {
             if (count($insertValues) > 100) {
                 DB::table('departments')
                         ->insert($insertValues);
-                $insertValues = [];
+                unset($insertValues);
             }
         }
     }
