@@ -28,13 +28,15 @@ class MedicalCaseController extends Controller {
     }
 
     public function index(Request $request, $id = null) {
+        $models = null;
+        
         if (is_null($id)) {
-            $model = $this->medicalCaseRepo->get($id);
+            $models = $this->medicalCaseRepo->one($id)->withDepartments()->withDiagnoses()->get();
         } else {
-            $this->medicalCaseRepo->all();
+            $models = $this->medicalCaseRepo->all()->withDepartments()->withDiagnoses()->get();
         }
-
-        return response()->json($this->getResponseBag());
+        dd($models);
+        //return response()->json($this->getResponseBag());
     }
 
     public function store(Request $request) {
