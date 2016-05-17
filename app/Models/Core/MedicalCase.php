@@ -3,8 +3,9 @@
 namespace App\Models\Core;
 
 use App\Models\Contracts\InterfaceModel;
+use App\Models\BaseModel;
 
-class MedicalCase implements InterfaceModel {
+class MedicalCase extends BaseModel implements InterfaceModel {
 
     /**
      *
@@ -130,9 +131,9 @@ class MedicalCase implements InterfaceModel {
         foreach ($this->getPatients() as $val) {
             $patients[] = $val->toArray();
         }
-        
+
         $diagnoses = [];
-        foreach ($this->getDiagnoses() as $val){
+        foreach ($this->getDiagnoses() as $val) {
             $diagnoses[] = $val->toArray();
         }
 

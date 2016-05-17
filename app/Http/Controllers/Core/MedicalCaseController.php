@@ -28,15 +28,44 @@ class MedicalCaseController extends Controller {
     }
 
     public function index(Request $request, $id = null) {
+        $pageNum = $request->query('page', 1);
+        $limit = $request->query('per_page', 5);
         $models = null;
-        
+
         if (is_null($id)) {
-            $models = $this->medicalCaseRepo->one($id)->withDepartments()->withDiagnoses()->get();
+            $models = $this->medicalCaseRepo
+                    ->all($limit, $limit * ($pageNum - 1))
+                    ->withDepartments()
+                    ->withDiagnoses()
+                    ->withPatients()
+                    ->get();
         } else {
-            $models = $this->medicalCaseRepo->all()->withDepartments()->withDiagnoses()->get();
+            $models = $this->medicalCaseRepo
+                    ->one($id)
+                    ->withDepartments()
+                    ->withDiagnoses()
+                    ->withPatients()
+                    ->get();
         }
-        dd($models);
-        //return response()->json($this->getResponseBag());
+
+        if (is_array($models)) {
+            $medicalCases = [];
+
+            foreach ($models as $case) {
+                $medicalCases[] = $case->toArray();
+            }
+
+            $this->setData('medical_cases', $medicalCases);
+        } else {
+            $this->setData('medical_case', $models->toArray());
+        }
+
+
+        $this->addItem('total', $this->medicalCaseRepo->count());
+        $this->addItem('per_page', $limit);
+        $this->setType(MedicalCase::getModelName());
+
+        return response()->json($this->getResponseBag());
     }
 
     public function store(Request $request) {
@@ -96,7 +125,7 @@ class MedicalCaseController extends Controller {
         return response()->json($this->getResponseBag());
     }
 
-    public function edit() {
+    public function edit(Request $request, $id) {
         
     }
 
