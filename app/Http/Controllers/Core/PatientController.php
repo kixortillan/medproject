@@ -78,5 +78,33 @@ class PatientController extends Controller {
     public function delete(Request $request, $id) {
         
     }
+    
+    public function search(Request $request) {
+        $search = $request->query('keyword', null);
+
+        try {
+            $this->validate($request, [
+                'keyword' => 'required'
+            ]);
+        } catch (Exception $ex) {
+            throw $ex;
+        }
+
+        try {
+            $models = $this->patientRepo
+                    ->search(['first_name', 'middle_name', 'last_name'], $search);
+
+            $patients = [];
+            foreach ($models as $item) {
+                $patients[] = $item->toArray();
+            }
+
+            $this->setData('patients', $patients);
+        } catch (Exception $ex) {
+            throw $ex;
+        }
+
+        return response()->json($this->getResponseBag());
+    }
 
 }

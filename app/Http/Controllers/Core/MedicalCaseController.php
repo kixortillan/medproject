@@ -35,16 +35,13 @@ class MedicalCaseController extends Controller {
         if (is_null($id)) {
             $models = $this->medicalCaseRepo
                     ->all($limit, $limit * ($pageNum - 1))
-                    ->withDepartments()
-                    ->withDiagnoses()
-                    ->withPatients()
                     ->get();
         } else {
             $models = $this->medicalCaseRepo
                     ->one($id)
                     ->withDepartments()
-                    ->withDiagnoses()
                     ->withPatients()
+                    ->withDiagnoses()
                     ->get();
         }
 
@@ -56,13 +53,12 @@ class MedicalCaseController extends Controller {
             }
 
             $this->setData('medical_cases', $medicalCases);
+            $this->addItem('total', $this->medicalCaseRepo->count());
+            $this->addItem('per_page', $limit);
         } else {
             $this->setData('medical_case', $models->toArray());
         }
 
-
-        $this->addItem('total', $this->medicalCaseRepo->count());
-        $this->addItem('per_page', $limit);
         $this->setType(MedicalCase::getModelName());
 
         return response()->json($this->getResponseBag());

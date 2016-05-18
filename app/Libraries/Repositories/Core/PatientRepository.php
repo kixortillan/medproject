@@ -107,4 +107,30 @@ class PatientRepository extends BaseRepository implements InterfacePatientReposi
         return $model;
     }
 
+    public function search($columns = [], $keyword) {
+        $query = DB::table($this->mainTable);
+
+        foreach ($columns as $col) {
+            $query->orWhere($col, "like", "%{$keyword}%");
+        }
+
+        $records = $query->limit(50)->get();
+
+        $models = [];
+        foreach ($records as $record) {
+            $temp = new Patient();
+            $temp->setId($record->id);
+            $temp->setFirstName($record->first_name);
+            $temp->setMiddleName($record->middle_name);
+            $temp->setLastName($record->last_name);
+            $temp->setDateRegistered($record->created_at);
+            $temp->setAddress($record->address);
+            $temp->setPostalCode($record->postal_code);
+
+            $models[] = $temp;
+        }
+
+        return $models;
+    }
+
 }

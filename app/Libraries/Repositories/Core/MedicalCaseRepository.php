@@ -174,8 +174,7 @@ class MedicalCaseRepository extends BaseRepository implements InterfaceMedicalCa
                 $temp->setPostalCode($record->postal_code);
                 $temp->setDateRegistered($record->created_at);
 
-                $this->result[$record->medical_case_id]
-                        ->addPatient($temp);
+                $this->result->addPatient($temp);
             }
         }
 
@@ -236,51 +235,11 @@ class MedicalCaseRepository extends BaseRepository implements InterfaceMedicalCa
     }
 
     public function save(MedicalCase $medicalCase) {
-        $id = DB::table($this->mainTable)->insertGetId([
-            'serial_num' => $medicalCase->getSerialNum(),
-            'created_at' => date('Y-m-d H:i:s'),
-        ]);
-
-        $medicalCase->setId($id);
-
-        $insertMedCaseDept = [];
-
-        foreach ($medicalCase->getDepartments() as $item) {
-            $insertMedCaseDept[] = [
-                'medical_case_id' => $medicalCase->getId(),
-                'department_id' => $item->getId(),
-                'created_at' => date('Y-m-d H:i:s'),
-            ];
+        if (is_null($medicalCase->getId())) {
+            $medicalCase = $this->saveMedicalCase($medicalCase);
+        } else {
+            $this->updateMedicalCase($medicalCase);
         }
-
-        DB::table($this->mapDeptsTable)
-                ->insert($insertMedCaseDept);
-
-        $insertMedCasePatients = [];
-
-        foreach ($medicalCase->getPatients() as $item) {
-            $insertMedCasePatients[] = [
-                'medical_case_id' => $medicalCase->getId(),
-                'patient_id' => $item->getId(),
-                'created_at' => date('Y-m-d H:i:s'),
-            ];
-        }
-
-        DB::table($this->mapPatientsTable)
-                ->insert($insertMedCasePatients);
-
-        $insertMedCaseDiagnoses = [];
-
-        foreach ($medicalCase->getDiagnoses() as $item) {
-            $insertMedCaseDiagnoses[] = [
-                'medical_case_id' => $medicalCase->getId(),
-                'diagnosis_id' => $item->getId(),
-                'created_at' => date('Y-m-d H:i:s'),
-            ];
-        }
-
-        DB::table($this->mapDiagnosesTable)
-                ->insert($insertMedCaseDiagnoses);
 
         return $medicalCase;
     }
@@ -293,6 +252,101 @@ class MedicalCaseRepository extends BaseRepository implements InterfaceMedicalCa
         } catch (Exception $ex) {
             throw $ex;
         }
+    }
+
+    private function saveMedicalCase(MedicalCase $medicalCase) {
+        DB::transaction(function() use($medicalCase) {
+            $id = DB::table($this->mainTable)->insertGetId([
+                'serial_num' => $medicalCase->getSerialNum(),
+                'created_at' => date('Y-m-d H:i:s'),
+            ]);
+
+            $medicalCase->setId($id);
+
+            $insertMedCaseDept = [];
+
+            foreach ($medicalCase->getDepartments() as $item) {
+                $insertMedCaseDept[] = [
+                    'medical_case_id' => $medicalCase->getId(),
+                    'department_id' => $item->getId(),
+                    'created_at' => date('Y-m-d H:i:s'),
+                ];
+            }
+
+            DB::table($this->mapDeptsTable)
+                    ->insert($insertMedCaseDept);
+
+            $insertMedCasePatients = [];
+
+            foreach ($medicalCase->getPatients() as $item) {
+                $insertMedCasePatients[] = [
+                    'medical_case_id' => $medicalCase->getId(),
+                    'patient_id' => $item->getId(),
+                    'created_at' => date('Y-m-d H:i:s'),
+                ];
+            }
+
+            DB::table($this->mapPatientsTable)
+                    ->insert($insertMedCasePatients);
+
+            $insertMedCaseDiagnoses = [];
+
+            foreach ($medicalCase->getDiagnoses() as $item) {
+                $insertMedCaseDiagnoses[] = [
+                    'medical_case_id' => $medicalCase->getId(),
+                    'diagnosis_id' => $item->getId(),
+                    'created_at' => date('Y-m-d H:i:s'),
+                ];
+            }
+
+            DB::table($this->mapDiagnosesTable)
+                    ->insert($insertMedCaseDiagnoses);
+        });
+        
+        return $medicalCase;
+    }
+
+    private function updateMedicalCase(MedicalCase $medicalCase) {
+        DB::transaction(function() use($medicalCase) {
+            $insertMedCaseDept = [];
+
+            foreach ($medicalCase->getDepartments() as $item) {
+                $insertMedCaseDept[] = [
+                    'medical_case_id' => $medicalCase->getId(),
+                    'department_id' => $item->getId(),
+                    'created_at' => date('Y-m-d H:i:s'),
+                ];
+            }
+
+            DB::table($this->mapDeptsTable)
+                    ->insert($insertMedCaseDept);
+
+            $insertMedCasePatients = [];
+
+            foreach ($medicalCase->getPatients() as $item) {
+                $insertMedCasePatients[] = [
+                    'medical_case_id' => $medicalCase->getId(),
+                    'patient_id' => $item->getId(),
+                    'created_at' => date('Y-m-d H:i:s'),
+                ];
+            }
+
+            DB::table($this->mapPatientsTable)
+                    ->insert($insertMedCasePatients);
+
+            $insertMedCaseDiagnoses = [];
+
+            foreach ($medicalCase->getDiagnoses() as $item) {
+                $insertMedCaseDiagnoses[] = [
+                    'medical_case_id' => $medicalCase->getId(),
+                    'diagnosis_id' => $item->getId(),
+                    'created_at' => date('Y-m-d H:i:s'),
+                ];
+            }
+
+            DB::table($this->mapDiagnosesTable)
+                    ->insert($insertMedCaseDiagnoses);
+        });
     }
 
 }
