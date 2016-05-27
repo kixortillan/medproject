@@ -18,7 +18,6 @@ class MedicalCaseRepository extends BaseRepository implements InterfaceMedicalCa
     protected $mapDeptsTable;
     protected $mapPatientsTable;
     protected $mapDiagnosesTable;
-    protected $builder;
     protected $result;
 
     public function __construct() {
@@ -30,10 +29,6 @@ class MedicalCaseRepository extends BaseRepository implements InterfaceMedicalCa
         $this->mapDeptsTable = "medical_case_departments";
         $this->mapPatientsTable = "medical_case_patients";
         $this->mapDiagnosesTable = "medical_case_diagnoses";
-    }
-
-    public function initBuilder() {
-        $this->builder = DB::table($this->mainTable);
     }
 
     public function withDepartments() {

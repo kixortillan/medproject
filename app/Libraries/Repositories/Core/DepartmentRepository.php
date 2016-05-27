@@ -6,12 +6,14 @@ use App\Libraries\Repositories\Core\Contracts\InterfaceDepartmentRepository;
 use App\Libraries\Repositories\Core\BaseRepository;
 use App\Models\Core\Department;
 use App\Models\Core\Disease;
+use Exception;
 use DB;
 
 class DepartmentRepository extends BaseRepository implements InterfaceDepartmentRepository {
 
     protected $diseaseTable;
     protected $diseaseMapTable;
+    protected $result;
 
     public function __construct() {
         parent::__construct();
@@ -22,22 +24,33 @@ class DepartmentRepository extends BaseRepository implements InterfaceDepartment
 
     /**
      * 
-     * @param int $id
+     * @return mixed
+     */
+    public function get() {
+        return $this->result;
+    }
+
+    /**
+     * 
+     * @param type $id
      * @return Department
      * @throws \App\Libraries\Repositories\Core\Exception
      */
-    public function get($id) {
+    public function one($id) {
         try {
-            $record = DB::table($this->mainTable)->where('id', $id)
+            $this->initBuilder();
+
+            $record = $this->getBuilder()
+                    ->where('id', $id)
                     ->first();
 
-            $model = new Department();
-            $model->setId($record->id);
-            $model->setCode($record->code);
-            $model->setName($record->name);
-            $model->setDesc($record->desc);
+            $this->result = new Department();
+            $this->result->setId($record->id);
+            $this->result->setCode($record->code);
+            $this->result->setName($record->name);
+            $this->result->setDesc($record->desc);
 
-            return $model;
+            return $this;
         } catch (Exception $ex) {
             throw $ex;
         }
@@ -50,19 +63,19 @@ class DepartmentRepository extends BaseRepository implements InterfaceDepartment
      */
     public function all($limit = null, $offset = null) {
         try {
-            $query = DB::table($this->mainTable);
+            $this->initBuilder();
 
             if (isset($limit)) {
-                $query->limit($limit);
+                $this->builder->limit($limit);
             }
 
             if (isset($offset)) {
-                $query->skip($offset);
+                $this->builder->skip($offset);
             }
 
-            $records = $query->get();
+            $records = $this->builder->get();
 
-            $models = [];
+            $this->result = [];
             foreach ($records as $record) {
                 $tempModel = new Department();
                 $tempModel->setId($record->id);
@@ -70,10 +83,10 @@ class DepartmentRepository extends BaseRepository implements InterfaceDepartment
                 $tempModel->setName($record->name);
                 $tempModel->setDesc($record->desc);
 
-                $models[] = $tempModel;
+                $this->result[$tempModel->getId()] = $tempModel;
             }
 
-            return $models;
+            return $this;
         } catch (Exception $ex) {
             throw $ex;
         }
@@ -86,7 +99,9 @@ class DepartmentRepository extends BaseRepository implements InterfaceDepartment
      */
     public function count() {
         try {
-            return DB::table($this->mainTable)
+            $this->initBuilder();
+
+            return $this->getBuilder()
                             ->whereNull('deleted_at')
                             ->count();
         } catch (Exception $ex) {
@@ -101,29 +116,33 @@ class DepartmentRepository extends BaseRepository implements InterfaceDepartment
      * @throws \App\Libraries\Repositories\Core\Exception
      */
     public function save(Department $model) {
+        $this->result = $model;
+
         try {
-            if (is_null($model->getId())) {
-                $id = DB::table($this->mainTable)
+            $this->initBuilder();
+
+            if (is_null($this->result->getId())) {
+                $id = $this->getBuilder()
                         ->insertGetId([
-                    'code' => $model->getCode(),
-                    'name' => $model->getName(),
-                    'desc' => $model->getDesc(),
+                    'code' => $this->result->getCode(),
+                    'name' => $this->result->getName(),
+                    'desc' => $this->result->getDesc(),
                 ]);
-                $model->setId($id);
+                $this->result->setId($id);
             } else {
-                DB::table($this->mainTable)
-                        ->where('id', $model->getId())
+                $this->getBuilder()
+                        ->where('id', $this->result->getId())
                         ->update([
-                            'code' => $model->getCode(),
-                            'name' => $model->getName(),
-                            'desc' => $model->getDesc(),
+                            'code' => $this->result->getCode(),
+                            'name' => $this->result->getName(),
+                            'desc' => $this->result->getDesc(),
                 ]);
             }
         } catch (Exception $ex) {
             throw $ex;
         }
 
-        return $model;
+        return $this;
     }
 
     /**
@@ -134,7 +153,9 @@ class DepartmentRepository extends BaseRepository implements InterfaceDepartment
      */
     public function delete($id) {
         try {
-            return DB::table($this->mainTable)
+            $this->initBuilder();
+
+            return $this->getBuilder()
                             ->delete($id);
         } catch (Exception $ex) {
             throw $ex;
@@ -147,45 +168,22 @@ class DepartmentRepository extends BaseRepository implements InterfaceDepartment
      * @throws \App\Libraries\Repositories\Core\Exception
      */
     public function withDisease() {
-        try {
-            $records = DB::table($this->mainTable)
-                    ->join($this->diseaseMapTable, "{$this->diseaseMapTable}.department_id", "=", "{$this->mainTable}.id")
-                    ->join($this->diseaseTable, "{$this->diseaseTable}.id", "=", "{$this->diseaseMapTable}.disease_id")
-                    ->get();
-
-            $models = [];
-            foreach ($records as $record) {
-                $dept = new Department();
-                $dept->setId($record->id);
-                $dept->setCode($record->code);
-                $dept->setName($record->name);
-                $dept->setDesc($record->desc);
-
-                $disease = new Disease();
-                $disease->setId($record->disease_id);
-                $disease->setName($record->name);
-                $disease->setDesc($record->desc);
-
-                $dept->addDisease($disease);
-                $models[] = $temp;
-            }
-
-            return $models;
-        } catch (Exception $ex) {
-            throw $ex;
-        }
+        
     }
 
     public function search($columns = [], $keyword) {
-        $query = DB::table($this->mainTable);
+        $this->initBuilder();
 
         foreach ($columns as $col) {
-            $query->orWhere($col, "like", "%{$keyword}%");
+            $this->getBuilder()
+                    ->orWhere($col, "like", "%{$keyword}%");
         }
 
-        $records = $query->limit(50)->get();
+        $records = $this->initBuilder()
+                ->limit(50)
+                ->get();
 
-        $models = [];
+        $this->result = [];
         foreach ($records as $record) {
             $temp = new Department();
             $temp->setId($record->id);
@@ -193,10 +191,10 @@ class DepartmentRepository extends BaseRepository implements InterfaceDepartment
             $temp->setCode($record->code);
             $temp->setDesc($record->desc);
 
-            $models[] = $temp;
+            $this->result[] = $temp;
         }
 
-        return $models;
+        return $this;
     }
 
 }

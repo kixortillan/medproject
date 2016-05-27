@@ -85,16 +85,9 @@ class MedicalCaseController extends Controller {
         $medicalCase->setSerialNum($serialNum);
 
         foreach ($departments as $val) {
-            $matchedDepartment = $this->deptRepo->search(['name'], $val);
+            $matchedDepartment = $this->deptRepo->get($val);
 
-            if (empty($matchedDepartment)) {
-                $newDepartment = new Department();
-                $newDepartment->setName($val);
-                $toAddDepartment = $this->deptRepo->save($newDepartment);
-            } else {
-                $toAddDepartment = head($matchedDepartment);
-            }
-            $medicalCase->addDepartment($toAddDepartment);
+            $medicalCase->addDepartment($matchedDepartment);
         }
 
         foreach ($patientId as $val) {
