@@ -19,7 +19,9 @@ class PatientControllerTest extends TestCase {
             'middle_name' => $middleName,
             'last_name' => $lastName,
         ])->shouldReturnJson()->seeJsonContains([
-            'full_name' => $firstName . "" . $middleName . " " .$lastName,
+            'first_name' => $firstName,
+            'middle_name' => $middleName,
+            'last_name' => $lastName,
         ])->seeJsonStructure([
             'id',
             'full_name',

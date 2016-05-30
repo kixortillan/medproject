@@ -12,7 +12,7 @@ class DepartmentControllerTest extends TestCase {
 
         $fakeName = $faker->name;
         $fakeDesc = $faker->sentence;
-        $fakeCode = $faker->text(10);
+        $fakeCode = $faker->word;
         $this->post('departments', [
             'code' => $fakeCode,
             'name' => $fakeName,

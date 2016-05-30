@@ -61,7 +61,7 @@ class DepartmentController extends Controller {
             $this->validate($request, [
                 'code' => 'bail|required|alpha_num',
                 'name' => 'bail|required|alpha_num',
-                'desc' => 'bail|alpha_num'
+                'desc' => 'bail'
             ]);
         } catch (Exception $ex) {
             throw $ex;

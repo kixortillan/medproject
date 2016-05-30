@@ -3,6 +3,7 @@
 namespace App\Libraries\Repositories\Core;
 
 use App\Libraries\Repositories\Core\Contracts\InterfaceDepartmentRepository;
+use App\Libraries\Repositories\Core\Exceptions\DepartmentNotFoundException;
 use App\Libraries\Repositories\Core\BaseRepository;
 use App\Models\Core\Department;
 use App\Models\Core\Disease;
@@ -43,6 +44,10 @@ class DepartmentRepository extends BaseRepository implements InterfaceDepartment
             $record = $this->getBuilder()
                     ->where('id', $id)
                     ->first();
+
+            if (!isset($record)) {
+                throw new DepartmentNotFoundException();
+            }
 
             $this->result = new Department();
             $this->result->setId($record->id);

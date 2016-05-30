@@ -8,14 +8,15 @@ interface InterfaceDepartmentRepository {
 
     /**
      * 
-     * @param int $id
      */
-    public function get($id);
+    public function get();
 
     /**
      * 
+     * @param type $limit
+     * @param type $offset
      */
-    public function all();
+    public function all($limit = null, $offset = null);
 
     /**
      * 
