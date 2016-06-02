@@ -176,15 +176,23 @@ class DepartmentRepository extends BaseRepository implements InterfaceDepartment
         
     }
 
-    public function search($columns = [], $keyword) {
+    /**
+     * 
+     * @param string $keyword
+     * @param array $columns
+     * @return \App\Libraries\Repositories\Core\DepartmentRepository
+     */
+    public function search($keyword = null, array $columns = []) {
         $this->initBuilder();
 
-        foreach ($columns as $col) {
-            $this->getBuilder()
-                    ->orWhere($col, "like", "%{$keyword}%");
+        if (!empty($keyword)) {
+            foreach ($columns as $col) {
+                $this->getBuilder()
+                        ->orWhere($col, "like", "%{$keyword}%");
+            }
         }
 
-        $records = $this->initBuilder()
+        $records = $this->getBuilder()
                 ->limit(50)
                 ->get();
 

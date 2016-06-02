@@ -13,6 +13,12 @@ interface InterfaceDepartmentRepository {
 
     /**
      * 
+     * @param type $id
+     */
+    public function one($id);
+
+    /**
+     * 
      * @param type $limit
      * @param type $offset
      */
@@ -23,4 +29,16 @@ interface InterfaceDepartmentRepository {
      * @param Department $model
      */
     public function save(Department $model);
+
+    /**
+     * 
+     */
+    public function count();
+
+    /**
+     * 
+     * @param string $keyword
+     * @param array $columns
+     */
+    public function search($keyword = null, array $columns = []);
 }

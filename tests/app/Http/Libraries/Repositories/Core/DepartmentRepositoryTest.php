@@ -44,7 +44,15 @@ class DepartmentRepositoryTest extends TestCase {
     }
 
     public function testSave() {
-        
+        $model = new \App\Models\Core\Department();
+        $model->setCode($this->faker->word);
+        $model->setName($this->faker->word);
+        $model->setDesc($this->faker->sentence);
+        $repo = $this->repo->save($model);
+        $this->assertInstanceOf(DepartmentRepository::class, $repo);
+        $this->assertInstanceOf(\App\Libraries\Repositories\Core\Contracts\InterfaceDepartmentRepository::class, $repo);
+        $repo->get(\App\Models\Contracts\InterfaceModel::class, $repo->get());
+        $repo->get(\App\Models\Core\Department::class, $repo->get());
     }
 
     public function testDelete() {
@@ -52,7 +60,8 @@ class DepartmentRepositoryTest extends TestCase {
     }
 
     public function testSearch() {
-        
+        $repo = $this->repo->search();
+        $this->assertInstanceOf(DepartmentRepository::class, $repo);
     }
 
 }
