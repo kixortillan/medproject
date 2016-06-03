@@ -73,7 +73,7 @@ class DepartmentController extends Controller {
             $model->setName($name);
             $model->setDesc($desc);
 
-            $model = $this->departmentRepo->save($model);
+            $model = $this->departmentRepo->save($model)->get();
 
             return response()->json($model->toArray());
         } catch (Exception $ex) {

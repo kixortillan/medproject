@@ -25,6 +25,9 @@ abstract class BaseRepository {
      */
     protected $builder;
 
+    /**
+     * 
+     */
     public function __construct() {
         
     }
@@ -43,6 +46,14 @@ abstract class BaseRepository {
 
     /**
      * 
+     * @param string $tableName
+     */
+    public function setTable($tableName) {
+        $this->mainTable = $tableName;
+    }
+
+    /**
+     * 
      * @return \Illuminate\Database\Query\Builder
      * @throws Exception
      */
@@ -53,6 +64,5 @@ abstract class BaseRepository {
 
         return $this->builder;
     }
-    
 
 }

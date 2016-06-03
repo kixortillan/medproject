@@ -6,9 +6,7 @@ use App\Libraries\Repositories\Core\Contracts\InterfaceDepartmentRepository;
 use App\Libraries\Repositories\Core\Exceptions\DepartmentNotFoundException;
 use App\Libraries\Repositories\Core\BaseRepository;
 use App\Models\Core\Department;
-use App\Models\Core\Disease;
 use Exception;
-use DB;
 
 class DepartmentRepository extends BaseRepository implements InterfaceDepartmentRepository {
 
@@ -18,7 +16,7 @@ class DepartmentRepository extends BaseRepository implements InterfaceDepartment
 
     public function __construct() {
         parent::__construct();
-        $this->mainTable = 'departments';
+        $this->setTable('departments');
         $this->diseaseTable = 'diseases';
         $this->diseaseMapTable = 'department_diseases';
     }
@@ -165,15 +163,6 @@ class DepartmentRepository extends BaseRepository implements InterfaceDepartment
         } catch (Exception $ex) {
             throw $ex;
         }
-    }
-
-    /**
-     * 
-     * @return type
-     * @throws \App\Libraries\Repositories\Core\Exception
-     */
-    public function withDisease() {
-        
     }
 
     /**

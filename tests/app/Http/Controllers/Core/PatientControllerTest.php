@@ -14,20 +14,28 @@ class PatientControllerTest extends TestCase {
         $middleName = $faker->lastName;
         $lastName = $faker->lastName;
 
-        $this->post('patients', [
+        $http = $this->post('patients', [
             'first_name' => $firstName,
             'middle_name' => $middleName,
             'last_name' => $lastName,
-        ])->shouldReturnJson()->seeJsonContains([
+        ]);
+        $http->assertResponseOk();
+        $http->shouldReturnJson();
+        $http->seeJsonContains([
             'first_name' => $firstName,
             'middle_name' => $middleName,
             'last_name' => $lastName,
-        ])->seeJsonStructure([
-            'id',
-            'full_name',
-            'postal_code',
-            'address'
-        ])->assertResponseOk();
+        ]);
+        $http->seeJsonStructure([
+            'data' => [
+                'patient' => [
+                    'id',
+                    'full_name',
+                    'postal_code',
+                    'address'
+                ]
+            ]
+        ]);
     }
 
     public function testIndex() {

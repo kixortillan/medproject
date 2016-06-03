@@ -10,23 +10,27 @@ class DepartmentControllerTest extends TestCase {
     public function testStore() {
         $faker = Faker\Factory::create();
 
-        $fakeName = $faker->name;
-        $fakeDesc = $faker->sentence;
+        $fakeName = $faker->word;
+        $fakeDesc = $faker->word;
         $fakeCode = $faker->word;
-        $this->post('departments', [
+        $http = $this->post('departments', [
             'code' => $fakeCode,
             'name' => $fakeName,
             'desc' => $fakeDesc,
-        ])->shouldReturnJson()->seeJsonContains([
+        ]);
+        $http->assertResponseOk();
+        $http->shouldReturnJson();
+        $http->seeJsonContains([
             'code' => $fakeCode,
             'name' => $fakeName,
             'desc' => $fakeDesc,
-        ])->seeJsonStructure([
+        ]);
+        $http->seeJsonStructure([
             'id',
             'code',
             'name',
             'desc'
-        ])->assertResponseOk();
+        ]);
     }
 
     public function testIndex() {
