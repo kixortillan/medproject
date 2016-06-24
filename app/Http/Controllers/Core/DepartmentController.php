@@ -18,24 +18,21 @@ class DepartmentController extends Controller {
 
     public function index(Request $request, $id = null) {
         if ($id != null) {
-            $this->setData('department', $this->departmentRepo->get($id)->toArray());
+            $this->setData('department', $this->departmentRepo->one($id)->get()->toArray());
         } else {
-            $page = $request->query('page', 1);
-            $limit = $request->query('per_page', 5);
-
             $this->validate($request, [
                 'page' => 'bail|numeric',
                 'per_page' => 'bail|numeric',
             ]);
 
+            $page = $request->query('page', 1);
+            $limit = $request->query('per_page', 5);
+
             $offset = $limit * ($page - 1);
 
-            if ($limit == -1) {
-                $limit = null;
-                $offset = null;
-            }
-
-            $models = $this->departmentRepo->all($limit, $offset);
+            $models = $this->departmentRepo
+                    ->all($limit, $offset)
+                    ->get();
 
             $departments = [];
             foreach ($models as $model) {

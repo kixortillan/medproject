@@ -4,10 +4,9 @@ use Laravel\Lumen\Testing\DatabaseMigrations;
 use Laravel\Lumen\Testing\DatabaseTransactions;
 use App\Libraries\Repositories\Core\DepartmentRepository;
 
-class DepartmentRepositoryTest extends TestCase {
+class DepartmentRepositoryTest extends BaseRepositoryTest {
 
-    use DatabaseTransactions,
-        DatabaseMigrations;
+    use DatabaseMigrations;
 
     protected $faker;
     protected $repo;

@@ -2,30 +2,24 @@
 
 use Laravel\Lumen\Testing\DatabaseMigrations;
 use Laravel\Lumen\Testing\DatabaseTransactions;
-use App\Libraries\Repositories\Core\DepartmentRepository;
+use App\Libraries\Repositories\Core\PatientRepository;
 
-class PatientRepositoryTest extends TestCase {
+class PatientRepositoryTest extends BaseRepositoryTest {
 
-    use DatabaseTransactions,
-        DatabaseMigrations;
+    use DatabaseMigrations;
 
     protected $faker;
     protected $repo;
 
     public function setUp() {
         parent::setUp();
-        $this->repo = new DepartmentRepository();
+        $this->repo = new PatientRepository();
         $this->faker = Faker\Factory::create();
         $this->artisan("db:seed", ['--class' => 'PatientTestSeeder']);
     }
 
     public function testGet() {
         $this->assertNull($this->repo->get());
-    }
-
-    public function testGetBuilderWithErrors() {
-        $this->setExpectedException(Exception::class);
-        $this->repo->getBuilder();
     }
 
     public function testOneWithErrors() {

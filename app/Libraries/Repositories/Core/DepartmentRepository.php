@@ -7,6 +7,7 @@ use App\Libraries\Repositories\Core\Exceptions\DepartmentNotFoundException;
 use App\Libraries\Repositories\Core\BaseRepository;
 use App\Models\Core\Department;
 use Exception;
+use DB;
 
 class DepartmentRepository extends BaseRepository implements InterfaceDepartmentRepository {
 
@@ -16,7 +17,8 @@ class DepartmentRepository extends BaseRepository implements InterfaceDepartment
 
     public function __construct() {
         parent::__construct();
-        $this->setTable('departments');
+        //$this->setTable('departments');
+        $this->setBuilder(DB::table('departments'));
         $this->diseaseTable = 'diseases';
         $this->diseaseMapTable = 'department_diseases';
     }
@@ -37,7 +39,7 @@ class DepartmentRepository extends BaseRepository implements InterfaceDepartment
      */
     public function one($id) {
         try {
-            $this->initBuilder();
+            //$this->initBuilder();
 
             $record = $this->getBuilder()
                     ->where('id', $id)
@@ -66,18 +68,18 @@ class DepartmentRepository extends BaseRepository implements InterfaceDepartment
      */
     public function all($limit = null, $offset = null) {
         try {
-            $this->initBuilder();
+            //$this->initBuilder();
 
             if (isset($limit)) {
-                $this->builder->limit($limit);
+                $this->getBuilder()->limit($limit);
             }
 
             if (isset($offset)) {
-                $this->builder->skip($offset);
+                $this->getBuilder()->skip($offset);
             }
 
-            $records = $this->builder->get();
-
+            $records = $this->getBuilder()->get();
+            
             $this->result = [];
             foreach ($records as $record) {
                 $tempModel = new Department();
@@ -102,7 +104,7 @@ class DepartmentRepository extends BaseRepository implements InterfaceDepartment
      */
     public function count() {
         try {
-            $this->initBuilder();
+            //$this->initBuilder();
 
             return $this->getBuilder()
                             ->whereNull('deleted_at')
@@ -122,7 +124,7 @@ class DepartmentRepository extends BaseRepository implements InterfaceDepartment
         $this->result = $model;
 
         try {
-            $this->initBuilder();
+            //$this->initBuilder();
 
             if (is_null($this->result->getId())) {
                 $id = $this->getBuilder()
@@ -156,7 +158,7 @@ class DepartmentRepository extends BaseRepository implements InterfaceDepartment
      */
     public function delete($id) {
         try {
-            $this->initBuilder();
+            //$this->initBuilder();
 
             return $this->getBuilder()
                             ->delete($id);
@@ -172,7 +174,7 @@ class DepartmentRepository extends BaseRepository implements InterfaceDepartment
      * @return \App\Libraries\Repositories\Core\DepartmentRepository
      */
     public function search($keyword = null, array $columns = []) {
-        $this->initBuilder();
+        //$this->initBuilder();
 
         if (!empty($keyword)) {
             foreach ($columns as $col) {

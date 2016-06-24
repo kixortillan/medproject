@@ -2,10 +2,11 @@
 
 namespace App\Libraries\Repositories\Core;
 
+use Illuminate\Database\Query\Builder;
 use Exception;
 use DB;
 
-abstract class BaseRepository {
+class BaseRepository {
 
     /**
      *
@@ -36,13 +37,17 @@ abstract class BaseRepository {
      * 
      * @throws Exception
      */
-    protected function initBuilder() {
-        if (!isset($this->mainTable)) {
-            throw new Exception('Main database table not yet initialized.');
-        }
+    /* protected function initBuilder($mainTable = null) {
+      if (isset($mainTable)) {
+      $this->mainTable = $mainTable;
+      }
 
-        $this->builder = DB::table($this->mainTable);
-    }
+      if (!isset($this->mainTable)) {
+      throw new Exception('Main database table not yet initialized.');
+      }
+
+      $this->builder = DB::table($this->mainTable);
+      } */
 
     /**
      * 
@@ -50,6 +55,10 @@ abstract class BaseRepository {
      */
     public function setTable($tableName) {
         $this->mainTable = $tableName;
+    }
+
+    public function setBuilder(Builder $builder) {
+        $this->builder = $builder;
     }
 
     /**

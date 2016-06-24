@@ -34,6 +34,14 @@ class PatientRepository extends BaseRepository implements InterfacePatientReposi
         return $model;
     }
 
+    public function get() {
+        return $this->result;
+    }
+
+    public function one($id) {
+        
+    }
+
     public function all($limit = null, $offset = null) {
         $query = DB::table($this->mainTable)
                 ->orderBy('created_at');
