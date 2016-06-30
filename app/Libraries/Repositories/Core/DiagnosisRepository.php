@@ -10,7 +10,6 @@ class DiagnosisRepository extends BaseRepository {
 
     public function __construct() {
         parent::__construct();
-        $this->mainTable = 'diagnoses';
     }
 
     public function get($id) {

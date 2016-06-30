@@ -6,7 +6,7 @@ use App\Models\Core\Patient;
 
 interface InterfacePatientRepository {
 
-    public function get($id);
+    public function one($id);
 
     public function all();
 

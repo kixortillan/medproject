@@ -12,38 +12,35 @@ class PatientRepository extends BaseRepository implements InterfacePatientReposi
 
     public function __construct() {
         parent::__construct();
-        $this->mainTable = 'patients';
+        $this->setBuilder(DB::table('patients'));
     }
 
-    public function get($id) {
-        $record = DB::table($this->mainTable)->find($id);
+    public function one($id) {
+        $record = $this->getBuilder()
+                ->find($id);
 
         if ($record == null) {
             throw new PatientNotFoundException();
         }
 
-        $model = new Patient();
-        $model->setId($record->id);
-        $model->setFirstName($record->first_name);
-        $model->setMiddleName($record->middle_name);
-        $model->setLastName($record->last_name);
-        $model->setDateRegistered($record->created_at);
-        $model->setAddress($record->address);
-        $model->setPostalCode($record->postal_code);
+        $this->result = new Patient();
+        $this->result->setId($record->id);
+        $this->result->setFirstName($record->first_name);
+        $this->result->setMiddleName($record->middle_name);
+        $this->result->setLastName($record->last_name);
+        $this->result->setDateRegistered($record->created_at);
+        $this->result->setAddress($record->address);
+        $this->result->setPostalCode($record->postal_code);
 
-        return $model;
+        return $this;
     }
 
     public function get() {
         return $this->result;
     }
 
-    public function one($id) {
-        
-    }
-
     public function all($limit = null, $offset = null) {
-        $query = DB::table($this->mainTable)
+        $query = $this->getBuilder()
                 ->orderBy('created_at');
 
         if (isset($limit)) {
@@ -56,7 +53,7 @@ class PatientRepository extends BaseRepository implements InterfacePatientReposi
 
         $records = $query->get();
 
-        $models = [];
+        $this->result = [];
         foreach ($records as $record) {
             $temp = new Patient;
             $temp->setId($record->id);
@@ -66,10 +63,10 @@ class PatientRepository extends BaseRepository implements InterfacePatientReposi
             $temp->setDateRegistered($record->created_at);
             $temp->setAddress($record->address);
             $temp->setPostalCode($record->postal_code);
-            $models[] = $temp;
+            $this->result[] = $temp;
         }
 
-        return $models;
+        return $this;
     }
 
     /**
@@ -79,7 +76,7 @@ class PatientRepository extends BaseRepository implements InterfacePatientReposi
      */
     public function count() {
         try {
-            return DB::table($this->mainTable)
+            return $this->getBuilder()
                             ->whereNull('deleted_at')
                             ->count();
         } catch (Exception $ex) {
@@ -90,7 +87,7 @@ class PatientRepository extends BaseRepository implements InterfacePatientReposi
     public function save(Patient $model) {
         try {
             if (is_null($model->getId())) {
-                $id = DB::table($this->mainTable)
+                $id = $this->getBuilder()
                         ->insertGetId([
                     'first_name' => $model->getFirstName(),
                     'middle_name' => $model->getMiddleName(),
@@ -99,7 +96,7 @@ class PatientRepository extends BaseRepository implements InterfacePatientReposi
                 ]);
                 $model->setId($id);
             } else {
-                DB::table($this->mainTable)
+                $this->getBuilder()
                         ->where('id', $model->getId())
                         ->update([
                             'first_name' => $model->getFirstName(),
@@ -116,7 +113,7 @@ class PatientRepository extends BaseRepository implements InterfacePatientReposi
     }
 
     public function search($columns = [], $keyword) {
-        $query = DB::table($this->mainTable);
+        $query = $this->getBuilder();
 
         foreach ($columns as $col) {
             $query->orWhere($col, "like", "%{$keyword}%");
@@ -124,7 +121,7 @@ class PatientRepository extends BaseRepository implements InterfacePatientReposi
 
         $records = $query->limit(50)->get();
 
-        $models = [];
+        $this->result = [];
         foreach ($records as $record) {
             $temp = new Patient();
             $temp->setId($record->id);
@@ -135,10 +132,10 @@ class PatientRepository extends BaseRepository implements InterfacePatientReposi
             $temp->setAddress($record->address);
             $temp->setPostalCode($record->postal_code);
 
-            $models[] = $temp;
+            $this->result[] = $temp;
         }
 
-        return $models;
+        return $this;
     }
 
 }

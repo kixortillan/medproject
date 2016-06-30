@@ -17,7 +17,6 @@ class DepartmentRepository extends BaseRepository implements InterfaceDepartment
 
     public function __construct() {
         parent::__construct();
-        //$this->setTable('departments');
         $this->setBuilder(DB::table('departments'));
         $this->diseaseTable = 'diseases';
         $this->diseaseMapTable = 'department_diseases';

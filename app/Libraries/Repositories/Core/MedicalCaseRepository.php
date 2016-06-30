@@ -22,7 +22,7 @@ class MedicalCaseRepository extends BaseRepository implements InterfaceMedicalCa
 
     public function __construct() {
         parent::__construct();
-        $this->mainTable = "medical_cases";
+        $this->setBuilder(DB::table('medical_cases'));
         $this->deptTable = "departments";
         $this->diagnosesTable = "diagnoses";
         $this->patientsTable = "patients";
@@ -32,25 +32,23 @@ class MedicalCaseRepository extends BaseRepository implements InterfaceMedicalCa
     }
 
     public function withDepartments() {
-        $this->initBuilder();
-
-        $this->builder->join($this->mapDeptsTable
+        $this->getBuilder()->join($this->mapDeptsTable
                 , "{$this->mapDeptsTable}.medical_case_id"
                 , "="
                 , "{$this->mainTable}.id");
 
-        $this->builder->join($this->deptTable
+        $this->getBuilder()->join($this->deptTable
                 , "{$this->deptTable}.id"
                 , "="
                 , "{$this->mapDeptsTable}.department_id");
 
         if (is_array($this->result)) {
-            $this->builder->whereIn('medical_case_id', array_keys($this->result));
+            $this->getBuilder()->whereIn('medical_case_id', array_keys($this->result));
         } else {
-            $this->builder->where('medical_case_id', $this->result->getId());
+            $this->getBuilder()->where('medical_case_id', $this->result->getId());
         }
 
-        $records = $this->builder->get();
+        $records = $this->getBuilder()->get();
 
         if (is_array($this->result)) {
             foreach ($records as $record) {
@@ -79,25 +77,23 @@ class MedicalCaseRepository extends BaseRepository implements InterfaceMedicalCa
     }
 
     public function withDiagnoses() {
-        $this->initBuilder();
-
-        $this->builder->join($this->mapDiagnosesTable
+        $this->getBuilder()->join($this->mapDiagnosesTable
                 , "{$this->mapDiagnosesTable}.medical_case_id"
                 , "="
                 , "{$this->mainTable}.id");
 
-        $this->builder->join($this->diagnosesTable
+        $this->getBuilder()->join($this->diagnosesTable
                 , "{$this->diagnosesTable}.id"
                 , "="
                 , "{$this->mapDiagnosesTable}.diagnosis_id");
 
         if (is_array($this->result)) {
-            $this->builder->whereIn('medical_case_id', array_keys($this->result));
+            $this->getBuilder()->whereIn('medical_case_id', array_keys($this->result));
         } else {
-            $this->builder->where('medical_case_id', $this->result->getId());
+            $this->getBuilder()->where('medical_case_id', $this->result->getId());
         }
 
-        $records = $this->builder->get();
+        $records = $this->getBuilder()->get();
 
         if (is_array($this->result)) {
             foreach ($records as $record) {
@@ -124,20 +120,18 @@ class MedicalCaseRepository extends BaseRepository implements InterfaceMedicalCa
     }
 
     public function withPatients() {
-        $this->initBuilder();
-
-        $this->builder->join($this->mapPatientsTable
+        $this->getBuilder()->join($this->mapPatientsTable
                 , "{$this->mapPatientsTable}.medical_case_id"
                 , "="
                 , "{$this->mainTable}.id");
 
-        $this->builder->join($this->patientsTable
+        $this->getBuilder()->join($this->patientsTable
                 , "{$this->patientsTable}.id"
                 , "="
                 , "{$this->mapPatientsTable}.patient_id");
 
         if (is_array($this->result)) {
-            $this->builder->whereIn('medical_case_id', array_keys($this->result));
+            $this->getBuilder()->whereIn('medical_case_id', array_keys($this->result));
         } else {
             $this->builder->where('medical_case_id', $this->result->getId());
         }
@@ -297,7 +291,7 @@ class MedicalCaseRepository extends BaseRepository implements InterfaceMedicalCa
             DB::table($this->mapDiagnosesTable)
                     ->insert($insertMedCaseDiagnoses);
         });
-        
+
         return $medicalCase;
     }
 

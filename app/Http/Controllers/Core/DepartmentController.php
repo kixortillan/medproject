@@ -40,7 +40,7 @@ class DepartmentController extends Controller {
             }
 
             $this->setData('departments', $departments);
-            $this->addItem('total', ceil($this->departmentRepo->count()));
+            $this->addItem('total', $this->departmentRepo->count());
             $this->addItem('per_page', $limit);
         }
 

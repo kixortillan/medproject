@@ -19,25 +19,26 @@ class PatientController extends Controller {
     public function index(Request $request, $id = null) {
         try {
             if (!is_null($id)) {
-                $this->setData('patient', $this->patientRepo->get($id)->toArray());
+                $this->setData('patient', $this->patientRepo->one($id)->get()->toArray());
             } else {
                 $page = $request->query('page', 1);
-                $limit = $request->query('per_page', 5);
+                $perPage = $request->query('per_page', 5);
 
                 $patients = [];
-                foreach ($this->patientRepo->all($limit, $limit * ($page - 1)) as $model) {
+                foreach ($this->patientRepo->all($perPage, $perPage * ($page - 1))->get() as $model) {
                     $patients[] = $model->toArray();
                 }
-
+                
                 $this->setData('patients', $patients);
-                $this->addItem('total', ceil($this->patientRepo->count() / $limit));
-                $this->addItem('per_page', $limit);
+                $this->addItem('total', $this->patientRepo->count());
+                $this->addItem('per_page', $perPage);
             }
-            $this->setType(Patient::getModelName());
         } catch (Exception $ex) {
             throw $ex;
         }
 
+        $this->setType(Patient::getModelName());
+        
         return response()->json($this->getResponseBag());
     }
 
