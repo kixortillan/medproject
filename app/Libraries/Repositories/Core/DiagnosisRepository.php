@@ -9,7 +9,7 @@ use DB;
 class DiagnosisRepository extends BaseRepository {
 
     public function __construct() {
-        parent::__construct();
+        
     }
 
     public function get($id) {

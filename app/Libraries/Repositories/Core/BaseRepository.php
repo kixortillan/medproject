@@ -2,9 +2,7 @@
 
 namespace App\Libraries\Repositories\Core;
 
-use Illuminate\Database\Query\Builder;
-use Exception;
-use DB;
+use App\Libraries\Repositories\Core\Repository;
 
 class BaseRepository {
 
@@ -16,38 +14,31 @@ class BaseRepository {
 
     /**
      *
-     * @var \Illuminate\Database\Query\Builder
+     * @var \App\Libraries\Repositories\Core\Repository
      */
-    protected $builder;
+    protected $repo;
 
     /**
      * 
      */
-    public function __construct() {
-        
+    public function __construct(Repository $repo) {
+        $this->repo = $repo;
     }
 
     /**
      * 
-     * @param \Illuminate\Database\Query\Builder $builder
+     * @param \App\Libraries\Repositories\Core\Repository $repo
      */
-    public function setBuilder(Builder $builder) {
-        $this->builder = $builder;
+    public function setRepository(Repository $repo) {
+        $this->repo = $repo;
     }
 
     /**
      * 
-     * @return \Illuminate\Database\Query\Builder
-     * @throws Exception
+     * @return \App\Libraries\Repositories\Core\Repository
      */
-    public function getBuilder() {
-        if (!isset($this->builder)) {
-            throw new Exception('Query Builder not yet initialized');
-        }
-
-        return $this->builder
-                        ->newQuery()
-                        ->from($this->builder->from);
+    public function getRepository() {
+        return $this->repo->builder();
     }
 
 }

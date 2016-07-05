@@ -5,14 +5,15 @@ namespace App\Libraries\Repositories\Core;
 use App\Libraries\Repositories\Core\Contracts\InterfacePatientRepository;
 use App\Libraries\Repositories\Core\Exceptions\PatientNotFoundException;
 use App\Libraries\Repositories\Core\BaseRepository;
+use App\Libraries\Repositories\Core\Repository;
 use App\Models\Core\Patient;
 use DB;
 
 class PatientRepository extends BaseRepository implements InterfacePatientRepository {
 
     public function __construct() {
-        parent::__construct();
-        $this->setBuilder(DB::table('patients'));
+        parent::__construct(new Repository('patients'));
+        //$this->setBuilder(DB::table('patients'));
     }
 
     public function one($id) {

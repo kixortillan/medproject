@@ -5,6 +5,7 @@ namespace App\Libraries\Repositories\Core;
 use App\Libraries\Repositories\Core\Contracts\InterfaceDepartmentRepository;
 use App\Libraries\Repositories\Core\Exceptions\DepartmentNotFoundException;
 use App\Libraries\Repositories\Core\BaseRepository;
+use App\Libraries\Repositories\Core\Repository;
 use App\Models\Core\Department;
 use Exception;
 use DB;
@@ -16,8 +17,8 @@ class DepartmentRepository extends BaseRepository implements InterfaceDepartment
     protected $result;
 
     public function __construct() {
-        parent::__construct();
-        $this->setBuilder(DB::table('departments'));
+        parent::__construct(new Repository('departments'));
+        //$this->setBuilder(DB::table('departments'));
         $this->diseaseTable = 'diseases';
         $this->diseaseMapTable = 'department_diseases';
     }

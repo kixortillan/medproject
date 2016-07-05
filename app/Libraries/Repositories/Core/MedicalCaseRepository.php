@@ -4,6 +4,7 @@ namespace App\Libraries\Repositories\Core;
 
 use App\Libraries\Repositories\Core\Contracts\InterfaceMedicalCaseRepository;
 use App\Libraries\Repositories\Core\BaseRepository;
+use App\Libraries\Repositories\Core\Repository;
 use App\Models\Core\MedicalCase;
 use App\Models\Core\Department;
 use App\Models\Core\Diagnosis;
@@ -19,10 +20,10 @@ class MedicalCaseRepository extends BaseRepository implements InterfaceMedicalCa
     protected $mapPatientsTable;
     protected $mapDiagnosesTable;
     protected $result;
+    protected $query;
 
     public function __construct() {
-        parent::__construct();
-        $this->setBuilder(DB::table('medical_cases'));
+        parent::__construct(new Repository('medical_cases'));
         $this->deptTable = "departments";
         $this->diagnosesTable = "diagnoses";
         $this->patientsTable = "patients";
@@ -32,23 +33,25 @@ class MedicalCaseRepository extends BaseRepository implements InterfaceMedicalCa
     }
 
     public function withDepartments() {
-        $this->getBuilder()->join($this->mapDeptsTable
+        $query = $this->getRepository();
+
+        $query->join($this->mapDeptsTable
                 , "{$this->mapDeptsTable}.medical_case_id"
                 , "="
-                , "{$this->mainTable}.id");
+                , "{$query->getTable()}.id");
 
-        $this->getBuilder()->join($this->deptTable
+        $query->join($this->deptTable
                 , "{$this->deptTable}.id"
                 , "="
                 , "{$this->mapDeptsTable}.department_id");
 
         if (is_array($this->result)) {
-            $this->getBuilder()->whereIn('medical_case_id', array_keys($this->result));
+            $query->whereIn('medical_case_id', array_keys($this->result));
         } else {
-            $this->getBuilder()->where('medical_case_id', $this->result->getId());
+            $query->where('medical_case_id', $this->result->getId());
         }
 
-        $records = $this->getBuilder()->get();
+        $records = $query->get();
 
         if (is_array($this->result)) {
             foreach ($records as $record) {
@@ -77,23 +80,23 @@ class MedicalCaseRepository extends BaseRepository implements InterfaceMedicalCa
     }
 
     public function withDiagnoses() {
-        $this->getBuilder()->join($this->mapDiagnosesTable
+        $query->join($this->mapDiagnosesTable
                 , "{$this->mapDiagnosesTable}.medical_case_id"
                 , "="
-                , "{$this->mainTable}.id");
+                , "{$query->getTable()}.id");
 
-        $this->getBuilder()->join($this->diagnosesTable
+        $query->join($this->diagnosesTable
                 , "{$this->diagnosesTable}.id"
                 , "="
                 , "{$this->mapDiagnosesTable}.diagnosis_id");
 
         if (is_array($this->result)) {
-            $this->getBuilder()->whereIn('medical_case_id', array_keys($this->result));
+            $query->whereIn('medical_case_id', array_keys($this->result));
         } else {
-            $this->getBuilder()->where('medical_case_id', $this->result->getId());
+            $query->where('medical_case_id', $this->result->getId());
         }
 
-        $records = $this->getBuilder()->get();
+        $records = $query->get();
 
         if (is_array($this->result)) {
             foreach ($records as $record) {
@@ -120,23 +123,23 @@ class MedicalCaseRepository extends BaseRepository implements InterfaceMedicalCa
     }
 
     public function withPatients() {
-        $this->getBuilder()->join($this->mapPatientsTable
+        $query->join($this->mapPatientsTable
                 , "{$this->mapPatientsTable}.medical_case_id"
                 , "="
-                , "{$this->mainTable}.id");
+                , "{$query->getTable()}.id");
 
-        $this->getBuilder()->join($this->patientsTable
+        $query->join($this->patientsTable
                 , "{$this->patientsTable}.id"
                 , "="
                 , "{$this->mapPatientsTable}.patient_id");
 
         if (is_array($this->result)) {
-            $this->getBuilder()->whereIn('medical_case_id', array_keys($this->result));
+            $query->whereIn('medical_case_id', array_keys($this->result));
         } else {
-            $this->builder->where('medical_case_id', $this->result->getId());
+            $query->where('medical_case_id', $this->result->getId());
         }
 
-        $records = $this->builder->get();
+        $records = $query->get();
 
         if (is_array($this->result)) {
             foreach ($records as $record) {
@@ -176,11 +179,11 @@ class MedicalCaseRepository extends BaseRepository implements InterfaceMedicalCa
 
     public function one($id) {
         try {
-            $this->initBuilder();
+            $query = $this->getRepository();
 
-            $this->builder->where('id', $id)->whereNull('deleted_at');
+            $query->where('id', $id)->whereNull('deleted_at');
 
-            $record = $this->builder->first();
+            $record = $query->first();
 
             $this->result = new MedicalCase();
 
@@ -195,17 +198,17 @@ class MedicalCaseRepository extends BaseRepository implements InterfaceMedicalCa
 
     public function all($limit = null, $offset = null) {
         try {
-            $this->initBuilder();
+            $query = $this->getRepository();
 
             if (isset($limit)) {
-                $this->builder->limit($limit);
+                $query->limit($limit);
             }
 
             if (isset($offset)) {
-                $this->builder->skip($offset);
+                $query->skip($offset);
             }
 
-            $records = $this->builder->whereNull('deleted_at')->get();
+            $records = $query->whereNull('deleted_at')->get();
 
             $this->result = [];
 
@@ -235,7 +238,7 @@ class MedicalCaseRepository extends BaseRepository implements InterfaceMedicalCa
 
     public function count() {
         try {
-            return DB::table($this->mainTable)
+            return $this->getRepository()
                             ->whereNull('deleted_at')
                             ->count();
         } catch (Exception $ex) {
@@ -245,7 +248,7 @@ class MedicalCaseRepository extends BaseRepository implements InterfaceMedicalCa
 
     private function saveMedicalCase(MedicalCase $medicalCase) {
         DB::transaction(function() use($medicalCase) {
-            $id = DB::table($this->mainTable)->insertGetId([
+            $id = $this->getRepository()->insertGetId([
                 'serial_num' => $medicalCase->getSerialNum(),
                 'created_at' => date('Y-m-d H:i:s'),
             ]);
