@@ -33,12 +33,12 @@ class MedicalCaseRepository extends BaseRepository implements InterfaceMedicalCa
     }
 
     public function withDepartments() {
-        $query = $this->getRepository();
+        $query = $this->getQueryBuilder();
 
         $query->join($this->mapDeptsTable
                 , "{$this->mapDeptsTable}.medical_case_id"
                 , "="
-                , "{$query->getTable()}.id");
+                , "{$this->getRepository()->getTable()}.id");
 
         $query->join($this->deptTable
                 , "{$this->deptTable}.id"
@@ -80,10 +80,12 @@ class MedicalCaseRepository extends BaseRepository implements InterfaceMedicalCa
     }
 
     public function withDiagnoses() {
+        $query = $this->getQueryBuilder();
+        
         $query->join($this->mapDiagnosesTable
                 , "{$this->mapDiagnosesTable}.medical_case_id"
                 , "="
-                , "{$query->getTable()}.id");
+                , "{$this->getRepository()->getTable()}.id");
 
         $query->join($this->diagnosesTable
                 , "{$this->diagnosesTable}.id"
@@ -123,10 +125,12 @@ class MedicalCaseRepository extends BaseRepository implements InterfaceMedicalCa
     }
 
     public function withPatients() {
+        $query = $this->getQueryBuilder();
+        
         $query->join($this->mapPatientsTable
                 , "{$this->mapPatientsTable}.medical_case_id"
                 , "="
-                , "{$query->getTable()}.id");
+                , "{$this->getRepository()->getTable()}.id");
 
         $query->join($this->patientsTable
                 , "{$this->patientsTable}.id"
@@ -179,7 +183,7 @@ class MedicalCaseRepository extends BaseRepository implements InterfaceMedicalCa
 
     public function one($id) {
         try {
-            $query = $this->getRepository();
+            $query = $this->getQueryBuilder();
 
             $query->where('id', $id)->whereNull('deleted_at');
 
@@ -198,7 +202,7 @@ class MedicalCaseRepository extends BaseRepository implements InterfaceMedicalCa
 
     public function all($limit = null, $offset = null) {
         try {
-            $query = $this->getRepository();
+            $query = $this->getQueryBuilder();
 
             if (isset($limit)) {
                 $query->limit($limit);
@@ -238,7 +242,7 @@ class MedicalCaseRepository extends BaseRepository implements InterfaceMedicalCa
 
     public function count() {
         try {
-            return $this->getRepository()
+            return $this->getQueryBuilder()
                             ->whereNull('deleted_at')
                             ->count();
         } catch (Exception $ex) {
@@ -248,7 +252,7 @@ class MedicalCaseRepository extends BaseRepository implements InterfaceMedicalCa
 
     private function saveMedicalCase(MedicalCase $medicalCase) {
         DB::transaction(function() use($medicalCase) {
-            $id = $this->getRepository()->insertGetId([
+            $id = $this->getQueryBuilder()->insertGetId([
                 'serial_num' => $medicalCase->getSerialNum(),
                 'created_at' => date('Y-m-d H:i:s'),
             ]);

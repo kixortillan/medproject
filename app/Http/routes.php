@@ -36,7 +36,6 @@ $app->put('patients/{id}', 'Core\PatientController@edit');
 $app->delete('patients/{id}', 'Core\PatientController@delete');
 
 $app->get('cases', 'Core\MedicalCaseController@index');
-$app->get('cases/all', 'Core\MedicalCaseController@index');
 $app->get('cases/{id}', 'Core\MedicalCaseController@index');
 $app->post('cases', 'Core\MedicalCaseController@store');
 

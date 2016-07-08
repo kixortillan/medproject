@@ -18,7 +18,6 @@ class DepartmentRepository extends BaseRepository implements InterfaceDepartment
 
     public function __construct() {
         parent::__construct(new Repository('departments'));
-        //$this->setBuilder(DB::table('departments'));
         $this->diseaseTable = 'diseases';
         $this->diseaseMapTable = 'department_diseases';
     }
@@ -39,9 +38,9 @@ class DepartmentRepository extends BaseRepository implements InterfaceDepartment
      */
     public function one($id) {
         try {
-            //$this->initBuilder();
+            $query = $this->getQueryBuilder();
 
-            $record = $this->getBuilder()
+            $record = $query
                     ->where('id', $id)
                     ->first();
 
@@ -68,17 +67,17 @@ class DepartmentRepository extends BaseRepository implements InterfaceDepartment
      */
     public function all($limit = null, $offset = null) {
         try {
-            //$this->initBuilder();
+            $query = $this->getQueryBuilder();
 
             if (isset($limit)) {
-                $this->getBuilder()->limit($limit);
+                $query->limit($limit);
             }
 
             if (isset($offset)) {
-                $this->getBuilder()->skip($offset);
+                $query->skip($offset);
             }
 
-            $records = $this->getBuilder()->get();
+            $records = $query->get();
             
             $this->result = [];
             foreach ($records as $record) {
@@ -104,9 +103,9 @@ class DepartmentRepository extends BaseRepository implements InterfaceDepartment
      */
     public function count() {
         try {
-            //$this->initBuilder();
+            $query = $this->getQueryBuilder();
 
-            return $this->getBuilder()
+            return $query
                             ->whereNull('deleted_at')
                             ->count();
         } catch (Exception $ex) {
@@ -124,10 +123,10 @@ class DepartmentRepository extends BaseRepository implements InterfaceDepartment
         $this->result = $model;
 
         try {
-            //$this->initBuilder();
+            $query = $this->getQueryBuilder();
 
             if (is_null($this->result->getId())) {
-                $id = $this->getBuilder()
+                $id = $query
                         ->insertGetId([
                     'code' => $this->result->getCode(),
                     'name' => $this->result->getName(),
@@ -135,7 +134,7 @@ class DepartmentRepository extends BaseRepository implements InterfaceDepartment
                 ]);
                 $this->result->setId($id);
             } else {
-                $this->getBuilder()
+                $query
                         ->where('id', $this->result->getId())
                         ->update([
                             'code' => $this->result->getCode(),
@@ -158,9 +157,9 @@ class DepartmentRepository extends BaseRepository implements InterfaceDepartment
      */
     public function delete($id) {
         try {
-            //$this->initBuilder();
+            $query = $this->getQueryBuilder();
 
-            return $this->getBuilder()
+            return $query
                             ->delete($id);
         } catch (Exception $ex) {
             throw $ex;
@@ -174,16 +173,16 @@ class DepartmentRepository extends BaseRepository implements InterfaceDepartment
      * @return \App\Libraries\Repositories\Core\DepartmentRepository
      */
     public function search($keyword = null, array $columns = []) {
-        //$this->initBuilder();
+        $query = $this->getQueryBuilder();
 
         if (!empty($keyword)) {
             foreach ($columns as $col) {
-                $this->getBuilder()
+                $query
                         ->orWhere($col, "like", "%{$keyword}%");
             }
         }
 
-        $records = $this->getBuilder()
+        $records = $query
                 ->limit(50)
                 ->get();
 

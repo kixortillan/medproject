@@ -38,6 +38,14 @@ class BaseRepository {
      * @return \App\Libraries\Repositories\Core\Repository
      */
     public function getRepository() {
+        return $this->repo;
+    }
+
+    /**
+     * 
+     * @return \Illuminate\Database\Query\Builder
+     */
+    public function getQueryBuilder() {
         return $this->repo->builder();
     }
 

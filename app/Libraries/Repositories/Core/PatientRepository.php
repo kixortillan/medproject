@@ -13,11 +13,10 @@ class PatientRepository extends BaseRepository implements InterfacePatientReposi
 
     public function __construct() {
         parent::__construct(new Repository('patients'));
-        //$this->setBuilder(DB::table('patients'));
     }
 
     public function one($id) {
-        $record = $this->getBuilder()
+        $record = $this->getQueryBuilder()
                 ->find($id);
 
         if ($record == null) {
@@ -41,7 +40,7 @@ class PatientRepository extends BaseRepository implements InterfacePatientReposi
     }
 
     public function all($limit = null, $offset = null) {
-        $query = $this->getBuilder()
+        $query = $this->getQueryBuilder()
                 ->orderBy('created_at');
 
         if (isset($limit)) {
@@ -77,7 +76,7 @@ class PatientRepository extends BaseRepository implements InterfacePatientReposi
      */
     public function count() {
         try {
-            return $this->getBuilder()
+            return $this->getQueryBuilder()
                             ->whereNull('deleted_at')
                             ->count();
         } catch (Exception $ex) {
@@ -88,7 +87,7 @@ class PatientRepository extends BaseRepository implements InterfacePatientReposi
     public function save(Patient $model) {
         try {
             if (is_null($model->getId())) {
-                $id = $this->getBuilder()
+                $id = $this->getQueryBuilder()
                         ->insertGetId([
                     'first_name' => $model->getFirstName(),
                     'middle_name' => $model->getMiddleName(),
@@ -97,7 +96,7 @@ class PatientRepository extends BaseRepository implements InterfacePatientReposi
                 ]);
                 $model->setId($id);
             } else {
-                $this->getBuilder()
+                $this->getQueryBuilder()
                         ->where('id', $model->getId())
                         ->update([
                             'first_name' => $model->getFirstName(),
@@ -114,7 +113,7 @@ class PatientRepository extends BaseRepository implements InterfacePatientReposi
     }
 
     public function search($columns = [], $keyword) {
-        $query = $this->getBuilder();
+        $query = $this->getQueryBuilder();
 
         foreach ($columns as $col) {
             $query->orWhere($col, "like", "%{$keyword}%");
