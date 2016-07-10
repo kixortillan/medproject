@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Core;
 
 use App\Libraries\Repositories\Core\DepartmentRepository;
 use App\Http\Controllers\Controller;
-use App\Models\Core\Department;
+use App\Models\Entity\Department;
 use Illuminate\Http\Request;
 use Exception;
 

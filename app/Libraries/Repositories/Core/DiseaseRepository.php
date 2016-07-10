@@ -4,8 +4,8 @@ namespace App\Libraries\Repositories\Core;
 
 use App\Libraries\Repositories\Core\Exceptions\DiseaseNotFoundException;
 use App\Libraries\Repositories\Core\BaseRepository;
-use App\Models\Core\Disease;
-use App\Models\Core\Symptom;
+use App\Models\Entity\Disease;
+use App\Models\Entity\Symptom;
 use Exception;
 use DB;
 
@@ -24,7 +24,7 @@ class DiseaseRepository extends BaseRepository {
     protected $mappingSymptomsTable = 'disease_symptoms';
 
     public function __construct() {
-        parent::__construct();
+        parent::__construct(new Repository('diseases'));
         $this->mainTable = 'diseases';
     }
 
@@ -55,7 +55,7 @@ class DiseaseRepository extends BaseRepository {
 
     /**
      * 
-     * @return array \App\Models\Core\Disease
+     * @return array \App\Models\Entity\Disease
      */
     public function all() {
         try {

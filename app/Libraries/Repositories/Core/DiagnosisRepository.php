@@ -3,7 +3,7 @@
 namespace App\Libraries\Repositories\Core;
 
 use App\Libraries\Repositories\Core\BaseRepository;
-use App\Models\Core\Diagnosis;
+use App\Models\Entity\Diagnosis;
 use DB;
 
 class DiagnosisRepository extends BaseRepository {

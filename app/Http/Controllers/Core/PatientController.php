@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Core;
 use App\Libraries\Repositories\Core\PatientRepository;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Core\Patient;
+use App\Models\Entity\Patient;
 use Exception;
 
 class PatientController extends Controller {
@@ -28,7 +28,7 @@ class PatientController extends Controller {
                 foreach ($this->patientRepo->all($perPage, $perPage * ($page - 1))->get() as $model) {
                     $patients[] = $model->toArray();
                 }
-                
+
                 $this->setData('patients', $patients);
                 $this->addItem('total', $this->patientRepo->count());
                 $this->addItem('per_page', $perPage);
@@ -38,7 +38,7 @@ class PatientController extends Controller {
         }
 
         $this->setType(Patient::getModelName());
-        
+
         return response()->json($this->getResponseBag());
     }
 
@@ -46,12 +46,14 @@ class PatientController extends Controller {
         $firstName = $request->input('first_name', null);
         $middleName = $request->input('middle_name', null);
         $lastName = $request->input('last_name', null);
+        $postalCode = $request->input('postal_code', null);
 
         try {
             $this->validate($request, [
                 'first_name' => 'bail|required|alpha',
                 'middle_name' => 'bail|alpha',
                 'last_name' => 'bail|required|alpha',
+                'postal_code' => 'bail|required',
             ]);
         } catch (Exception $ex) {
             throw $ex;
@@ -62,8 +64,10 @@ class PatientController extends Controller {
             $patient->setFirstName(ucwords($firstName));
             $patient->setMiddleName(ucwords($middleName));
             $patient->setLastName(ucwords($lastName));
+            $patient->setPostalCode($postalCode);
+            $this->patientRepo->save($patient);
 
-            $this->setData('patient', $this->patientRepo->save($patient)->toArray());
+            $this->setData('patient', $this->patientRepo->get()->toArray());
             $this->setType(Patient::getModelName());
 
             return response()->json($this->getResponseBag());
@@ -79,7 +83,7 @@ class PatientController extends Controller {
     public function delete(Request $request, $id) {
         
     }
-    
+
     public function search(Request $request) {
         $search = $request->query('keyword', null);
 

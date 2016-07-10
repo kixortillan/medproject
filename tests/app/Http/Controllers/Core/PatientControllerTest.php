@@ -13,11 +13,13 @@ class PatientControllerTest extends TestCase {
         $firstName = $faker->firstName;
         $middleName = $faker->lastName;
         $lastName = $faker->lastName;
+        $postalCode = $faker->postcode;
 
         $http = $this->post('patients', [
             'first_name' => $firstName,
             'middle_name' => $middleName,
             'last_name' => $lastName,
+            'postal_code' => $postalCode,
         ]);
         $http->assertResponseOk();
         $http->shouldReturnJson();

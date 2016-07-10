@@ -7,9 +7,9 @@ use App\Libraries\Repositories\Core\DepartmentRepository;
 use App\Libraries\Repositories\Core\DiagnosisRepository;
 use App\Libraries\Repositories\Core\PatientRepository;
 use App\Http\Controllers\Controller;
-use App\Models\Core\MedicalCase;
-use App\Models\Core\Department;
-use App\Models\Core\Diagnosis;
+use App\Models\Entity\MedicalCase;
+use App\Models\Entity\Department;
+use App\Models\Entity\Diagnosis;
 use Illuminate\Http\Request;
 use Exception;
 

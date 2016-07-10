@@ -2,7 +2,7 @@
 
 namespace App\Libraries\Repositories\Core\Contracts;
 
-use App\Models\Core\Patient;
+use App\Models\Entity\Patient;
 
 interface InterfacePatientRepository {
 

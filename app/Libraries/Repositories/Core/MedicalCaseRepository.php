@@ -5,10 +5,10 @@ namespace App\Libraries\Repositories\Core;
 use App\Libraries\Repositories\Core\Contracts\InterfaceMedicalCaseRepository;
 use App\Libraries\Repositories\Core\BaseRepository;
 use App\Libraries\Repositories\Core\Repository;
-use App\Models\Core\MedicalCase;
-use App\Models\Core\Department;
-use App\Models\Core\Diagnosis;
-use App\Models\Core\Patient;
+use App\Models\Entity\MedicalCase;
+use App\Models\Entity\Department;
+use App\Models\Entity\Diagnosis;
+use App\Models\Entity\Patient;
 use DB;
 
 class MedicalCaseRepository extends BaseRepository implements InterfaceMedicalCaseRepository {

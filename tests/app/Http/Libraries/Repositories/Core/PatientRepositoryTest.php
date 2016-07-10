@@ -4,7 +4,7 @@ use Laravel\Lumen\Testing\DatabaseMigrations;
 use Laravel\Lumen\Testing\DatabaseTransactions;
 use App\Libraries\Repositories\Core\PatientRepository;
 
-class PatientRepositoryTest extends BaseRepositoryTest {
+class PatientRepositoryTest extends TestCase {
 
     use DatabaseMigrations;
 
@@ -23,7 +23,7 @@ class PatientRepositoryTest extends BaseRepositoryTest {
     }
 
     public function testOneWithErrors() {
-        $this->setExpectedException(App\Libraries\Repositories\Core\Exceptions\DepartmentNotFoundException::class);
+        $this->setExpectedException(App\Libraries\Repositories\Core\Exceptions\PatientNotFoundException::class);
         $this->repo->one($this->faker->randomNumber());
     }
 
@@ -38,15 +38,16 @@ class PatientRepositoryTest extends BaseRepositoryTest {
     }
 
     public function testSave() {
-        $model = new \App\Models\Core\Department();
-        $model->setCode($this->faker->word);
-        $model->setName($this->faker->word);
-        $model->setDesc($this->faker->sentence);
+        $model = new \App\Models\Entity\Patient();
+        $model->setFirstName($this->faker->firstName);
+        $model->setMiddleName($this->faker->lastName);
+        $model->setLastName($this->faker->lastName);
+        $model->setPostalCode($this->faker->postcode);
         $repo = $this->repo->save($model);
-        $this->assertInstanceOf(DepartmentRepository::class, $repo);
-        $this->assertInstanceOf(\App\Libraries\Repositories\Core\Contracts\InterfaceDepartmentRepository::class, $repo);
+        $this->assertInstanceOf(PatientRepository::class, $repo);
+        $this->assertInstanceOf(\App\Libraries\Repositories\Core\Contracts\InterfacePatientRepository::class, $repo);
         $repo->get(\App\Models\Contracts\InterfaceModel::class, $repo->get());
-        $repo->get(\App\Models\Core\Department::class, $repo->get());
+        $repo->get(\App\Models\Entity\Patient::class, $repo->get());
     }
 
     public function testDelete() {
@@ -55,7 +56,7 @@ class PatientRepositoryTest extends BaseRepositoryTest {
 
     public function testSearch() {
         $repo = $this->repo->search();
-        $this->assertInstanceOf(DepartmentRepository::class, $repo);
+        $this->assertInstanceOf(PatientRepository::class, $repo);
     }
 
 }

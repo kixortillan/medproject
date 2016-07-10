@@ -6,7 +6,7 @@ use App\Libraries\Repositories\Core\Contracts\InterfaceDepartmentRepository;
 use App\Libraries\Repositories\Core\Exceptions\DepartmentNotFoundException;
 use App\Libraries\Repositories\Core\BaseRepository;
 use App\Libraries\Repositories\Core\Repository;
-use App\Models\Core\Department;
+use App\Models\Entity\Department;
 use Exception;
 use DB;
 
@@ -78,7 +78,7 @@ class DepartmentRepository extends BaseRepository implements InterfaceDepartment
             }
 
             $records = $query->get();
-            
+
             $this->result = [];
             foreach ($records as $record) {
                 $tempModel = new Department();
@@ -120,31 +120,31 @@ class DepartmentRepository extends BaseRepository implements InterfaceDepartment
      * @throws \App\Libraries\Repositories\Core\Exception
      */
     public function save(Department $model) {
-        $this->result = $model;
-
         try {
             $query = $this->getQueryBuilder();
 
-            if (is_null($this->result->getId())) {
+            if (is_null($model->getId())) {
                 $id = $query
                         ->insertGetId([
-                    'code' => $this->result->getCode(),
-                    'name' => $this->result->getName(),
-                    'desc' => $this->result->getDesc(),
+                    'code' => $model->getCode(),
+                    'name' => $model->getName(),
+                    'desc' => $model->getDesc(),
                 ]);
-                $this->result->setId($id);
+                $model->setId($id);
             } else {
                 $query
-                        ->where('id', $this->result->getId())
+                        ->where('id', $model->getId())
                         ->update([
-                            'code' => $this->result->getCode(),
-                            'name' => $this->result->getName(),
-                            'desc' => $this->result->getDesc(),
+                            'code' => $model->getCode(),
+                            'name' => $model->getName(),
+                            'desc' => $model->getDesc(),
                 ]);
             }
         } catch (Exception $ex) {
             throw $ex;
         }
+
+        $this->result = $model;
 
         return $this;
     }

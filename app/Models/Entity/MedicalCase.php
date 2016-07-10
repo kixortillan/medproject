@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Core;
+namespace App\Models\Entity;
 
 use App\Models\Contracts\InterfaceModel;
 use App\Models\BaseModel;
@@ -79,7 +79,7 @@ class MedicalCase extends BaseModel implements InterfaceModel {
 
     /**
      * 
-     * @param \App\Models\Core\Department $department
+     * @param \App\Models\Entity\Department $department
      */
     public function addDepartment(Department $department) {
         $this->departments[] = $department;
@@ -95,7 +95,7 @@ class MedicalCase extends BaseModel implements InterfaceModel {
 
     /**
      * 
-     * @param \App\Models\Core\Patient $patient
+     * @param \App\Models\Entity\Patient $patient
      */
     public function addPatient(Patient $patient) {
         $this->patients[] = $patient;
@@ -111,7 +111,7 @@ class MedicalCase extends BaseModel implements InterfaceModel {
 
     /**
      * 
-     * @param \App\Models\Core\Diagnosis $diagnosis
+     * @param \App\Models\Entity\Diagnosis $diagnosis
      */
     public function addDiagnoses(Diagnosis $diagnosis) {
         $this->diagnoses[] = $diagnosis;

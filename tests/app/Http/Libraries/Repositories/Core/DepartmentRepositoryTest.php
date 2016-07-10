@@ -4,7 +4,7 @@ use Laravel\Lumen\Testing\DatabaseMigrations;
 use Laravel\Lumen\Testing\DatabaseTransactions;
 use App\Libraries\Repositories\Core\DepartmentRepository;
 
-class DepartmentRepositoryTest extends BaseRepositoryTest {
+class DepartmentRepositoryTest extends TestCase {
 
     use DatabaseMigrations;
 
@@ -20,11 +20,6 @@ class DepartmentRepositoryTest extends BaseRepositoryTest {
 
     public function testGet() {
         $this->assertNull($this->repo->get());
-    }
-
-    public function testGetBuilderWithErrors() {
-        $this->setExpectedException(Exception::class);
-        $this->repo->getBuilder();
     }
 
     public function testOneWithErrors() {
@@ -48,7 +43,7 @@ class DepartmentRepositoryTest extends BaseRepositoryTest {
     }
 
     public function testSaveReturnsRepoInstance() {
-        $model = new \App\Models\Core\Department();
+        $model = new \App\Models\Entity\Department();
         $model->setCode($this->faker->word);
         $model->setName($this->faker->word);
         $model->setDesc($this->faker->sentence);
@@ -58,13 +53,13 @@ class DepartmentRepositoryTest extends BaseRepositoryTest {
     }
 
     public function testSaveReturnsModelInstance() {
-        $model = new \App\Models\Core\Department();
+        $model = new \App\Models\Entity\Department();
         $model->setCode($this->faker->word);
         $model->setName($this->faker->word);
         $model->setDesc($this->faker->sentence);
         $repo = $this->repo->save($model);
         $repo->get(\App\Models\Contracts\InterfaceModel::class, $repo->get());
-        $repo->get(\App\Models\Core\Department::class, $repo->get());
+        $repo->get(\App\Models\Entity\Department::class, $repo->get());
     }
 
     public function testDelete() {

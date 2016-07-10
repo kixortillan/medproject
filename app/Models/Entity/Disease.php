@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Models\Core;
+namespace App\Models\Entity;
 
 use App\Models\Contracts\InterfaceModel;
-use App\Models\Core\SeverityControl;
-use App\Models\Core\Symptom;
+use App\Models\Entity\SeverityControl;
+use App\Models\Entity\Symptom;
 
 class Disease implements InterfaceModel {
 
@@ -28,13 +28,13 @@ class Disease implements InterfaceModel {
 
     /**
      *
-     * @var \App\Models\Core\SeverityControl
+     * @var \App\Models\Entity\SeverityControl
      */
     protected $severityControl;
 
     /**
      *
-     * @var array App\Models\Core\Symptom
+     * @var array App\Models\Entity\Symptom
      */
     protected $symptoms = [];
 
@@ -88,7 +88,7 @@ class Disease implements InterfaceModel {
 
     /**
      * 
-     * @return \App\Models\Core\SeverityControl
+     * @return \App\Models\Entity\SeverityControl
      */
     public function getSeverityControl() {
         return $this->severityControl;
@@ -96,7 +96,7 @@ class Disease implements InterfaceModel {
 
     /**
      * 
-     * @param \App\Models\Core\SeverityControl $severityControl
+     * @param \App\Models\Entity\SeverityControl $severityControl
      */
     public function setSeverityControl(SeverityControl $severityControl) {
         $this->severityControl = $severityControl;
@@ -104,7 +104,7 @@ class Disease implements InterfaceModel {
 
     /**
      * 
-     * @param \App\Models\Core\Symptom $symptom
+     * @param \App\Models\Entity\Symptom $symptom
      */
     public function addSymptom(Symptom $symptom) {
         $this->symptoms[$symptom->getCode()] = $symptom;
@@ -112,7 +112,7 @@ class Disease implements InterfaceModel {
 
     /**
      * 
-     * @return array \App\Models\Core\Symptom
+     * @return array \App\Models\Entity\Symptom
      */
     public function getAllSymptoms() {
         return $this->symptoms;

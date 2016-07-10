@@ -6,7 +6,7 @@ use App\Libraries\Repositories\Core\Contracts\InterfacePatientRepository;
 use App\Libraries\Repositories\Core\Exceptions\PatientNotFoundException;
 use App\Libraries\Repositories\Core\BaseRepository;
 use App\Libraries\Repositories\Core\Repository;
-use App\Models\Core\Patient;
+use App\Models\Entity\Patient;
 use DB;
 
 class PatientRepository extends BaseRepository implements InterfacePatientRepository {
@@ -92,6 +92,7 @@ class PatientRepository extends BaseRepository implements InterfacePatientReposi
                     'first_name' => $model->getFirstName(),
                     'middle_name' => $model->getMiddleName(),
                     'last_name' => $model->getLastName(),
+                    'postal_code' => $model->getPostalCode(),
                     'created_at' => date('Y-m-d H:i:s'),
                 ]);
                 $model->setId($id);
@@ -102,6 +103,7 @@ class PatientRepository extends BaseRepository implements InterfacePatientReposi
                             'first_name' => $model->getFirstName(),
                             'middle_name' => $model->getMiddleName(),
                             'last_name' => $model->getLastName(),
+                            'postal_code' => $model->getPostalCode(),
                             'updated_at' => date('Y-m-d H:i:s')
                 ]);
             }
@@ -109,17 +111,24 @@ class PatientRepository extends BaseRepository implements InterfacePatientReposi
             throw $ex;
         }
 
-        return $model;
+        $this->result = $model;
+
+        return $this;
     }
 
-    public function search($columns = [], $keyword) {
+    public function search($keyword = null, array $columns = []) {
         $query = $this->getQueryBuilder();
 
-        foreach ($columns as $col) {
-            $query->orWhere($col, "like", "%{$keyword}%");
+        if (!empty($keyword)) {
+            foreach ($columns as $col) {
+                $query
+                        ->orWhere($col, "like", "%{$keyword}%");
+            }
         }
 
-        $records = $query->limit(50)->get();
+        $records = $query
+                ->limit(50)
+                ->get();
 
         $this->result = [];
         foreach ($records as $record) {

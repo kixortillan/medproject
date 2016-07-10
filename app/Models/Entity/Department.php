@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Models\Core;
+namespace App\Models\Entity;
 
 use App\Models\Contracts\InterfaceModel;
-use App\Models\Core\Disease;
+use App\Models\Entity\Disease;
 use App\Models\BaseModel;
 
 class Department extends BaseModel implements InterfaceModel {
@@ -34,7 +34,7 @@ class Department extends BaseModel implements InterfaceModel {
 
     /**
      *
-     * @var array \App\Models\Core\Disease 
+     * @var array \App\Models\Entity\Disease 
      */
     protected $diseases = [];
 
@@ -104,7 +104,7 @@ class Department extends BaseModel implements InterfaceModel {
 
     /**
      * 
-     * @param \App\Models\Core\Disease $disease
+     * @param \App\Models\Entity\Disease $disease
      */
     public function addDisease(Disease $disease) {
         $this->diseases[$disease->getName()] = $disease;
@@ -113,7 +113,7 @@ class Department extends BaseModel implements InterfaceModel {
     /**
      * 
      * @param string $name
-     * @return \App\Models\Core\Disease 
+     * @return \App\Models\Entity\Disease 
      */
     public function getDisease($name) {
         return $this->diseases[$name];
@@ -121,7 +121,7 @@ class Department extends BaseModel implements InterfaceModel {
 
     /**
      * 
-     * @return array \App\Models\Core\Disease 
+     * @return array \App\Models\Entity\Disease 
      */
     public function getAllDiseases() {
         return $this->diseases;

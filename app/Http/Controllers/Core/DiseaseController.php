@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Core;
 use App\Libraries\Repositories\Core\DiseaseRepository;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Core\Disease;
+use App\Models\Entity\Disease;
 use Exception;
 
 class DiseaseController extends Controller {
