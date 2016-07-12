@@ -3,6 +3,7 @@
 namespace App\Libraries\Repositories\Core;
 
 use App\Libraries\Repositories\Core\Contracts\InterfaceMedicalCaseRepository;
+use App\Libraries\Repositories\Core\Exceptions\MedicalCaseNotFoundException;
 use App\Libraries\Repositories\Core\BaseRepository;
 use App\Libraries\Repositories\Core\Repository;
 use App\Models\Entity\MedicalCase;
@@ -13,37 +14,50 @@ use DB;
 
 class MedicalCaseRepository extends BaseRepository implements InterfaceMedicalCaseRepository {
 
-    protected $deptTable;
-    protected $diagnosesTable;
-    protected $patientsTable;
-    protected $mapDeptsTable;
-    protected $mapPatientsTable;
-    protected $mapDiagnosesTable;
-    protected $result;
-    protected $query;
+    //protected $deptTable;
+    //protected $diagnosesTable;
+    //protected $patientsTable;
+    //protected $mapDeptsTable;
+    //protected $mapPatientsTable;
+    //protected $mapDiagnosesTable;
+    //protected $result;
+    //protected $query;
+    
+    protected $mapDeptRepo;
+    protected $mapPatientRepo;
+    protected $deptRepo;
+    protected $patientRepo;
 
     public function __construct() {
         parent::__construct(new Repository('medical_cases'));
-        $this->deptTable = "departments";
-        $this->diagnosesTable = "diagnoses";
-        $this->patientsTable = "patients";
-        $this->mapDeptsTable = "medical_case_departments";
-        $this->mapPatientsTable = "medical_case_patients";
-        $this->mapDiagnosesTable = "medical_case_diagnoses";
+        $this->mapDeptRepo = new Repository('medical_case_departments');
+        $this->mapPatientRepo = new Repository('medical_case_departments');
+        $this->mapDiagnosisRepo = new Repository('medical_case_diagnoses');
+        $this->deptRepo = new Repository('departments');
+        $this->patientRepo = new Repository('patients');
+        $this->diagnosisRepo = new Repository('diagnoses');
+        
+        
+        //$this->deptTable = "departments";
+        //$this->diagnosesTable = "diagnoses";
+        //$this->patientsTable = "patients";
+        //$this->mapDeptsTable = "medical_case_departments";
+        //$this->mapPatientsTable = "medical_case_patients";
+        //$this->mapDiagnosesTable = "medical_case_diagnoses";
     }
 
     public function withDepartments() {
         $query = $this->getQueryBuilder();
 
-        $query->join($this->mapDeptsTable
-                , "{$this->mapDeptsTable}.medical_case_id"
+        $query->join($this->mapDeptRepo->getTable()
+                , "{$this->mapDeptRepo->getTable()}.medical_case_id"
                 , "="
                 , "{$this->getRepository()->getTable()}.id");
 
-        $query->join($this->deptTable
-                , "{$this->deptTable}.id"
+        $query->join($this->deptRepo->getTable()
+                , "{$this->deptRepo->getTable()}.id"
                 , "="
-                , "{$this->mapDeptsTable}.department_id");
+                , "{$this->mapDeptRepo->getTable()}.department_id");
 
         if (is_array($this->result)) {
             $query->whereIn('medical_case_id', array_keys($this->result));
@@ -81,7 +95,7 @@ class MedicalCaseRepository extends BaseRepository implements InterfaceMedicalCa
 
     public function withDiagnoses() {
         $query = $this->getQueryBuilder();
-        
+
         $query->join($this->mapDiagnosesTable
                 , "{$this->mapDiagnosesTable}.medical_case_id"
                 , "="
@@ -126,16 +140,16 @@ class MedicalCaseRepository extends BaseRepository implements InterfaceMedicalCa
 
     public function withPatients() {
         $query = $this->getQueryBuilder();
-        
-        $query->join($this->mapPatientsTable
-                , "{$this->mapPatientsTable}.medical_case_id"
+
+        $query->join($this->mapPatientRepo->getTable()
+                , "{$this->mapPatientRepo->getTable()}.medical_case_id"
                 , "="
                 , "{$this->getRepository()->getTable()}.id");
 
-        $query->join($this->patientsTable
-                , "{$this->patientsTable}.id"
+        $query->join($this->patientRepo->getTable()
+                , "{$this->patientRepo->getTable()}.id"
                 , "="
-                , "{$this->mapPatientsTable}.patient_id");
+                , "{$this->mapPatientRepo->getTable()}.patient_id");
 
         if (is_array($this->result)) {
             $query->whereIn('medical_case_id', array_keys($this->result));
@@ -188,6 +202,10 @@ class MedicalCaseRepository extends BaseRepository implements InterfaceMedicalCa
             $query->where('id', $id)->whereNull('deleted_at');
 
             $record = $query->first();
+
+            if ($record == null) {
+                throw new MedicalCaseNotFoundException();
+            }
 
             $this->result = new MedicalCase();
 
