@@ -8,56 +8,11 @@ use App\Libraries\Repositories\Core\BaseRepository;
 use App\Libraries\Repositories\Core\Repository;
 use App\Models\Entity\Department;
 use Exception;
-use DB;
 
 class DepartmentRepository extends BaseRepository implements InterfaceDepartmentRepository {
 
-    protected $diseaseTable;
-    protected $diseaseMapTable;
-    protected $result;
-
     public function __construct() {
         parent::__construct(new Repository('departments'));
-        $this->diseaseTable = 'diseases';
-        $this->diseaseMapTable = 'department_diseases';
-    }
-
-    /**
-     * 
-     * @return mixed
-     */
-    public function get() {
-        return $this->result;
-    }
-
-    /**
-     * 
-     * @param type $id
-     * @return Department
-     * @throws \App\Libraries\Repositories\Core\Exception
-     */
-    public function one($id) {
-        try {
-            $query = $this->getQueryBuilder();
-
-            $record = $query
-                    ->where('id', $id)
-                    ->first();
-
-            if (!isset($record)) {
-                throw new DepartmentNotFoundException();
-            }
-
-            $this->result = new Department();
-            $this->result->setId($record->id);
-            $this->result->setCode($record->code);
-            $this->result->setName($record->name);
-            $this->result->setDesc($record->desc);
-
-            return $this;
-        } catch (Exception $ex) {
-            throw $ex;
-        }
     }
 
     /**
@@ -65,7 +20,7 @@ class DepartmentRepository extends BaseRepository implements InterfaceDepartment
      * @return Department
      * @throws \App\Libraries\Repositories\Core\Exception
      */
-    public function all($limit = null, $offset = null) {
+    public function all(int $limit = null, int $offset = null) {
         try {
             $query = $this->getQueryBuilder();
 
@@ -77,7 +32,9 @@ class DepartmentRepository extends BaseRepository implements InterfaceDepartment
                 $query->skip($offset);
             }
 
-            $records = $query->get();
+            $records = $query->whereNull('deleted_at')
+                    ->orderBy('created_at', 'desc')
+                    ->get();
 
             $this->result = [];
             foreach ($records as $record) {
@@ -105,9 +62,74 @@ class DepartmentRepository extends BaseRepository implements InterfaceDepartment
         try {
             $query = $this->getQueryBuilder();
 
-            return $query
-                            ->whereNull('deleted_at')
+            return $query->whereNull('deleted_at')
                             ->count();
+        } catch (Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    /**
+     * 
+     * @param int $id
+     * @return int
+     * @throws \App\Libraries\Repositories\Core\Exception
+     */
+    public function delete(int $id) {
+        try {
+            $query = $this->getQueryBuilder();
+
+            return $query->where('id', $id)
+                            ->update([
+                                'deleted_at' => Carbon::now()->toDateTimeString()
+            ]);
+        } catch (Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    /**
+     * 
+     * @return Collection|Object
+     */
+    public function get() {
+        try {
+            if (is_array($this->result)) {
+                return collect($this->result);
+            }
+
+            return $this->result;
+        } catch (Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    /**
+     * 
+     * @param int $id
+     * @return \App\Libraries\Repositories\Core\DepartmentRepository
+     * @throws Exception
+     * @throws DepartmentNotFoundExceptions
+     */
+    public function one(int $id) {
+        try {
+            $query = $this->getQueryBuilder();
+
+            $record = $query->where('id', $id)
+                    ->whereNull('deleted_at')
+                    ->first();
+
+            if ($record == null) {
+                throw new DepartmentNotFoundException();
+            }
+
+            $this->result = new Department();
+            $this->result->setId($record->id);
+            $this->result->setCode($record->code);
+            $this->result->setName($record->name);
+            $this->result->setDesc($record->desc);
+
+            return $this;
         } catch (Exception $ex) {
             throw $ex;
         }
@@ -124,16 +146,14 @@ class DepartmentRepository extends BaseRepository implements InterfaceDepartment
             $query = $this->getQueryBuilder();
 
             if (is_null($model->getId())) {
-                $id = $query
-                        ->insertGetId([
+                $id = $query->insertGetId([
                     'code' => $model->getCode(),
                     'name' => $model->getName(),
                     'desc' => $model->getDesc(),
                 ]);
                 $model->setId($id);
             } else {
-                $query
-                        ->where('id', $model->getId())
+                $query->where('id', $model->getId())
                         ->update([
                             'code' => $model->getCode(),
                             'name' => $model->getName(),
@@ -151,53 +171,47 @@ class DepartmentRepository extends BaseRepository implements InterfaceDepartment
 
     /**
      * 
-     * @param int $id
-     * @return int
-     * @throws \App\Libraries\Repositories\Core\Exception
+     * @param type $columns
+     * @param type $keyword
+     * @return \App\Libraries\Repositories\Core\DepartmentRepository
+     * @throws Exception
      */
-    public function delete($id) {
+    public function search($columns, $keyword) {
+        if ($keyword == '') {
+            throw new Exception('Cannot search using empty string');
+        }
+
         try {
             $query = $this->getQueryBuilder();
 
-            return $query
-                            ->delete($id);
+            if (is_array($columns)) {
+                foreach ($columns as $col) {
+                    $query->orWhere($col, "like", "%{$keyword}%");
+                }
+            } else {
+                $query->where($columns, "like", "%{$keyword}%");
+            }
+
+            $records = $query->limit(50)
+                    ->whereNull('deleted_at')
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+
+            $this->result = [];
+            foreach ($records as $record) {
+                $temp = new Department();
+                $temp->setId($record->id);
+                $temp->setName($record->name);
+                $temp->setCode($record->code);
+                $temp->setDesc($record->desc);
+
+                $this->result[] = $temp;
+            }
+
+            return $this;
         } catch (Exception $ex) {
             throw $ex;
         }
-    }
-
-    /**
-     * 
-     * @param string $keyword
-     * @param array $columns
-     * @return \App\Libraries\Repositories\Core\DepartmentRepository
-     */
-    public function search($keyword = null, array $columns = []) {
-        $query = $this->getQueryBuilder();
-
-        if (!empty($keyword)) {
-            foreach ($columns as $col) {
-                $query
-                        ->orWhere($col, "like", "%{$keyword}%");
-            }
-        }
-
-        $records = $query
-                ->limit(50)
-                ->get();
-
-        $this->result = [];
-        foreach ($records as $record) {
-            $temp = new Department();
-            $temp->setId($record->id);
-            $temp->setName($record->name);
-            $temp->setCode($record->code);
-            $temp->setDesc($record->desc);
-
-            $this->result[] = $temp;
-        }
-
-        return $this;
     }
 
 }

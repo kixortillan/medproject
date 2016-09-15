@@ -10,6 +10,7 @@ use App\Models\Entity\MedicalCase;
 use App\Models\Entity\Department;
 use App\Models\Entity\Diagnosis;
 use App\Models\Entity\Patient;
+use Exception;
 use DB;
 
 class MedicalCaseRepository extends BaseRepository implements InterfaceMedicalCaseRepository {
@@ -22,7 +23,7 @@ class MedicalCaseRepository extends BaseRepository implements InterfaceMedicalCa
     //protected $mapDiagnosesTable;
     //protected $result;
     //protected $query;
-    
+
     protected $mapDeptRepo;
     protected $mapPatientRepo;
     protected $deptRepo;
@@ -36,8 +37,8 @@ class MedicalCaseRepository extends BaseRepository implements InterfaceMedicalCa
         $this->deptRepo = new Repository('departments');
         $this->patientRepo = new Repository('patients');
         $this->diagnosisRepo = new Repository('diagnoses');
-        
-        
+
+
         //$this->deptTable = "departments";
         //$this->diagnosesTable = "diagnoses";
         //$this->patientsTable = "patients";
@@ -195,7 +196,14 @@ class MedicalCaseRepository extends BaseRepository implements InterfaceMedicalCa
         return $this->result;
     }
 
-    public function one($id) {
+    /**
+     * 
+     * @param int $id
+     * @return \App\Libraries\Repositories\Core\MedicalCaseRepository
+     * @throws Exception
+     * @throws MedicalCaseNotFoundException
+     */
+    public function one(int $id) {
         try {
             $query = $this->getQueryBuilder();
 
@@ -218,7 +226,7 @@ class MedicalCaseRepository extends BaseRepository implements InterfaceMedicalCa
         }
     }
 
-    public function all($limit = null, $offset = null) {
+    public function all(int $limit = null, int $offset = null) {
         try {
             $query = $this->getQueryBuilder();
 
@@ -230,7 +238,9 @@ class MedicalCaseRepository extends BaseRepository implements InterfaceMedicalCa
                 $query->skip($offset);
             }
 
-            $records = $query->whereNull('deleted_at')->get();
+            $records = $query->whereNull('deleted_at')
+                    ->orderBy('created_at', 'desc')
+                    ->get();
 
             $this->result = [];
 
@@ -361,6 +371,14 @@ class MedicalCaseRepository extends BaseRepository implements InterfaceMedicalCa
             DB::table($this->mapDiagnosesTable)
                     ->insert($insertMedCaseDiagnoses);
         });
+    }
+
+    public function delete(int $id) {
+        
+    }
+
+    public function search($columns, $keyword) {
+        
     }
 
 }

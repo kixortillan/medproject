@@ -2,13 +2,14 @@
 
 namespace App\Libraries\Repositories\Core\Contracts;
 
+use App\Libraries\Repositories\Core\Contracts\InterfaceRepository;
 use App\Models\Entity\Patient;
 
-interface InterfacePatientRepository {
+interface InterfacePatientRepository extends InterfaceRepository {
 
-    public function one($id);
-
-    public function all();
-
-    public function save(Patient $patient);
+    /**
+     * 
+     * @param Patient $model
+     */
+    public function save(Patient $model);
 }

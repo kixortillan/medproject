@@ -6,21 +6,22 @@ interface InterfaceRepository {
 
     /**
      * 
+     * @param int $id
      */
-    public function get();
+    public function delete(int $id);
 
     /**
      * 
-     * @param type $id
+     * @param int $id
      */
-    public function one($id);
+    public function one(int $id);
 
     /**
      * 
-     * @param type $limit
-     * @param type $offset
+     * @param int $limit
+     * @param int $offset
      */
-    public function all($limit = null, $offset = null);
+    public function all(int $limit = null, int $offset = null);
 
     /**
      * 
@@ -29,8 +30,8 @@ interface InterfaceRepository {
 
     /**
      * 
-     * @param string $keyword
-     * @param array $columns
+     * @param type $columns
+     * @param type $keyword
      */
-    public function search($keyword = null, array $columns = []);
+    public function search($columns, $keyword);
 }

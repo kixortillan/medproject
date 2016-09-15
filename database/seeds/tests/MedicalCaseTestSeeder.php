@@ -39,7 +39,7 @@ class MedicalCaseTestSeeder extends Seeder {
                         foreach ($depts as $dept) {
                             $insertData[] = [
                                 'medical_case_id' => $md->id,
-                                'department_id' => $dept->id,
+                                'department_code' => $dept->code,
                             ];
                         }
                     }

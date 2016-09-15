@@ -31,17 +31,23 @@ class MedicalCaseSeeder extends Seeder {
                 ->chunk(10000, function($medicalCases) use($faker) {
                     $insertData = [];
                     foreach ($medicalCases as $md) {
-                        $depts = DB::table('departments')
+                        /*$depts = DB::table('departments')
                                 ->whereBetween('created_at', [$faker->dateTimeThisDecade, $faker->dateTimeThisDecade])
                                 ->limit(mt_rand(3, 7))
-                                ->get();
-
-                        foreach ($depts as $dept) {
+                                ->get();*/
+                        DB::table('departments')->chunk(100, function($item) use($md) {
                             $insertData[] = [
                                 'medical_case_id' => $md->id,
-                                'department_id' => $dept->id,
+                                'department_code' => $item->code,
                             ];
-                        }
+                        });
+
+                        /* foreach ($depts as $dept) {
+                          $insertData[] = [
+                          'medical_case_id' => $md->id,
+                          'department_code' => $dept->code,
+                          ];
+                          } */
                     }
                     DB::table('medical_case_departments')
                     ->insert($insertData);

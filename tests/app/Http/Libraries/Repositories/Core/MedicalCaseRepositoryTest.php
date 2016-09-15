@@ -23,6 +23,7 @@ class MedicalCaseRepositoryTest extends TestCase {
     }
 
     public function testOne() {
+        $this->setExpectedException(\App\Libraries\Repositories\Core\Exceptions\MedicalCaseNotFoundException::class);
         $this->repo->one(-1);
     }
 

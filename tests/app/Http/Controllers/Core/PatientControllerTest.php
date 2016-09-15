@@ -61,7 +61,6 @@ class PatientControllerTest extends TestCase {
         ]);
 
         $this->delete("diseases/{$id}")
-                ->shouldReturnJson()
                 ->assertResponseOk();
     }
 

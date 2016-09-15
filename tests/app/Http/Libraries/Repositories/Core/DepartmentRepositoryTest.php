@@ -67,7 +67,7 @@ class DepartmentRepositoryTest extends TestCase {
     }
 
     public function testSearch() {
-        $repo = $this->repo->search();
+        $repo = $this->repo->search($this->faker->word, $this->faker->word);
         $this->assertInstanceOf(DepartmentRepository::class, $repo);
     }
 

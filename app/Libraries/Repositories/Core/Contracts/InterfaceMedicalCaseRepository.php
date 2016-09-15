@@ -2,34 +2,14 @@
 
 namespace App\Libraries\Repositories\Core\Contracts;
 
+use App\Libraries\Repositories\Core\Contracts\InterfaceRepository;
 use App\Models\Entity\MedicalCase;
 
-interface InterfaceMedicalCaseRepository {
+interface InterfaceMedicalCaseRepository extends InterfaceRepository {
 
     /**
      * 
+     * @param MedicalCase $model
      */
-    public function get();
-
-    /**
-     * 
-     * @param type $id
-     */
-    public function one($id);
-
-    /**
-     * 
-     */
-    public function all();
-
-    /**
-     * 
-     * @param MedicalCase $case
-     */
-    public function save(MedicalCase $case);
-    
-    /**
-     * 
-     */
-    public function count();
+    public function save(MedicalCase $model);
 }

@@ -14,8 +14,8 @@ class CreateMedicalCaseDepartments extends Migration
     {
         Schema::create('medical_case_departments', function (Blueprint $table) {
             $table->bigInteger('medical_case_id');
-            $table->bigInteger('department_id');
-            $table->primary(['medical_case_id', 'department_id']);
+            $table->bigInteger('department_code');
+            $table->primary(['medical_case_id', 'department_code']);
             $table->timestamps();
         });
     }
