@@ -82,6 +82,7 @@ $app->singleton(
 // $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 $app->register(Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
+$app->register(LaravelDoctrine\ORM\DoctrineServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------

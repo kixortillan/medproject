@@ -49,7 +49,7 @@ class PatientRepository extends BaseRepository implements InterfacePatientReposi
                 $temp->setDateRegistered($record->created_at);
                 $temp->setAddress($record->address);
                 $temp->setPostalCode($record->postal_code);
-                $this->result[] = $temp;
+                $this->result[$temp->getId()] = $temp;
             }
 
             return $this;

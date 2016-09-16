@@ -15,18 +15,28 @@ use DB;
 
 class MedicalCaseRepository extends BaseRepository implements InterfaceMedicalCaseRepository {
 
-    //protected $deptTable;
-    //protected $diagnosesTable;
-    //protected $patientsTable;
-    //protected $mapDeptsTable;
-    //protected $mapPatientsTable;
-    //protected $mapDiagnosesTable;
-    //protected $result;
-    //protected $query;
-
+    /**
+     *
+     * @var type 
+     */
     protected $mapDeptRepo;
+
+    /**
+     *
+     * @var type 
+     */
     protected $mapPatientRepo;
+
+    /**
+     *
+     * @var type 
+     */
     protected $deptRepo;
+
+    /**
+     *
+     * @var type 
+     */
     protected $patientRepo;
 
     public function __construct() {
@@ -37,14 +47,6 @@ class MedicalCaseRepository extends BaseRepository implements InterfaceMedicalCa
         $this->deptRepo = new Repository('departments');
         $this->patientRepo = new Repository('patients');
         $this->diagnosisRepo = new Repository('diagnoses');
-
-
-        //$this->deptTable = "departments";
-        //$this->diagnosesTable = "diagnoses";
-        //$this->patientsTable = "patients";
-        //$this->mapDeptsTable = "medical_case_departments";
-        //$this->mapPatientsTable = "medical_case_patients";
-        //$this->mapDiagnosesTable = "medical_case_diagnoses";
     }
 
     public function withDepartments() {
@@ -192,8 +194,21 @@ class MedicalCaseRepository extends BaseRepository implements InterfaceMedicalCa
         return $this;
     }
 
+    /**
+     * 
+     * @return type
+     * @throws Exception
+     */
     public function get() {
-        return $this->result;
+        try {
+            if (is_array($this->result)) {
+                return collect($this->result);
+            }
+
+            return $this->result;
+        } catch (Exception $ex) {
+            throw $ex;
+        }
     }
 
     /**
@@ -226,6 +241,13 @@ class MedicalCaseRepository extends BaseRepository implements InterfaceMedicalCa
         }
     }
 
+    /**
+     * 
+     * @param int $limit
+     * @param int $offset
+     * @return \App\Libraries\Repositories\Core\MedicalCaseRepository
+     * @throws Exception
+     */
     public function all(int $limit = null, int $offset = null) {
         try {
             $query = $this->getQueryBuilder();
@@ -258,16 +280,26 @@ class MedicalCaseRepository extends BaseRepository implements InterfaceMedicalCa
         }
     }
 
+    /**
+     * 
+     * @param MedicalCase $medicalCase
+     * @return \App\Libraries\Repositories\Core\MedicalCaseRepository
+     */
     public function save(MedicalCase $medicalCase) {
         if (is_null($medicalCase->getId())) {
-            $medicalCase = $this->saveMedicalCase($medicalCase);
+            $this->result = $this->saveMedicalCase($medicalCase);
         } else {
-            $this->updateMedicalCase($medicalCase);
+            $this->result = $this->updateMedicalCase($medicalCase);
         }
 
-        return $medicalCase;
+        return $this;
     }
 
+    /**
+     * 
+     * @return type
+     * @throws Exception
+     */
     public function count() {
         try {
             return $this->getQueryBuilder()
@@ -278,6 +310,11 @@ class MedicalCaseRepository extends BaseRepository implements InterfaceMedicalCa
         }
     }
 
+    /**
+     * 
+     * @param MedicalCase $medicalCase
+     * @return MedicalCase
+     */
     private function saveMedicalCase(MedicalCase $medicalCase) {
         DB::transaction(function() use($medicalCase) {
             $id = $this->getQueryBuilder()->insertGetId([
@@ -330,6 +367,11 @@ class MedicalCaseRepository extends BaseRepository implements InterfaceMedicalCa
         return $medicalCase;
     }
 
+    /**
+     * 
+     * @param MedicalCase $medicalCase
+     * @return MedicalCase
+     */
     private function updateMedicalCase(MedicalCase $medicalCase) {
         DB::transaction(function() use($medicalCase) {
             $insertMedCaseDept = [];
@@ -371,10 +413,27 @@ class MedicalCaseRepository extends BaseRepository implements InterfaceMedicalCa
             DB::table($this->mapDiagnosesTable)
                     ->insert($insertMedCaseDiagnoses);
         });
+
+        return $medicalCase;
     }
 
+    /**
+     * 
+     * @param int $id
+     * @return type
+     * @throws Exception
+     */
     public function delete(int $id) {
-        
+        try {
+            $query = $this->getQueryBuilder();
+
+            return $query->where('id', $id)
+                            ->update([
+                                'deleted_at' => Carbon::now()->toDateTimeString()
+            ]);
+        } catch (Exception $ex) {
+            throw $ex;
+        }
     }
 
     public function search($columns, $keyword) {

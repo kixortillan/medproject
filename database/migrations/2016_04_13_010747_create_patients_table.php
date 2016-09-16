@@ -14,11 +14,11 @@ class CreatePatientsTable extends Migration
     {
         Schema::create('patients', function (Blueprint $table) {
             $table->bigIncrements('id')->unsigned();
-            $table->string('first_name', 30);
-            $table->string('middle_name', 30)->nullable();
-            $table->string('last_name', 30);
+            $table->text('first_name');
+            $table->text('middle_name')->nullable();
+            $table->text('last_name');
             $table->text('address')->nullable();
-            $table->string('postal_code', 10);
+            $table->text('postal_code');
             $table->timestamps();
             $table->softDeletes();
         });

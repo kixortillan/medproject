@@ -14,7 +14,7 @@ class CreateDiagnosesTable extends Migration
     {
         Schema::create('diagnoses', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name', 60);
+            $table->text('name');
             $table->text('desc')->nullable();
             $table->timestamps();
             $table->softDeletes();
