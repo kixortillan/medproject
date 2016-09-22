@@ -4,35 +4,40 @@ use Laravel\Lumen\Testing\DatabaseMigrations;
 use Laravel\Lumen\Testing\DatabaseTransactions;
 use App\Libraries\Repositories\Core\Doctrine\DepartmentRepository;
 
-class DepartmentRepositoryFunctionalTest extends TestCase {
+class DepartmentRepositoryUnitTest extends TestCase {
 
     use DatabaseMigrations;
 
     protected $faker;
     protected $repo;
+    protected $mockManager;
 
     public function setUp() {
         parent::setUp();
-        $this->repo = new DepartmentRepository(app('registry')->getManagerForClass(\App\Libraries\Entities\Core\Department::class));
+        $this->mockManager = $this->getMockBuilder(\Doctrine\ORM\EntityManager::class)
+                ->disableOriginalConstructor()
+                ->getMock();
+        //$this->repo = new DepartmentRepository($this->mockManager);
         $this->faker = Faker\Factory::create();
         //$this->artisan("db:seed", ['--class' => 'DepartmentTestSeeder']);
     }
 
     public function testFindByCode() {
-        //$entity = entity(\App\Libraries\Entities\Core\Department::class)
-         //       ->create();
-        //$this->assertInstanceOf(\App\Libraries\Entities\Core\Department::class, $this->repo->findByCode($entity->getCode()));
-    }
+        $code = $this->faker->word;
+        
+        $this->mockManager->expects($this->once())
+                ->method('getRepository')
+                ->with(\App\Libraries\Entities\Core\Department::class)
+                ->will($this->returnValue(app('registry')->getManagerForClass(\App\Libraries\Entities\Core\Department::class)->getRepository(\App\Libraries\Entities\Core\Department::class)));
 
-//    public function testFindByCodeFail() {
-//        $this->assertNull($this->repo->findByCode($this->faker->unique()->word));
-//    }
-//
-//    public function testCount() {
-//        $count = $this->repo->count();
-//        $this->assertNotNull($count);
-//        $this->assertTrue(is_numeric($count));
-//    }
+        /*$this->mockManager->expects($this->once())
+                ->method('findOneBy')
+                ->withAnyParameters()
+                ->will($this->returnValue(new \App\Libraries\Entities\Core\Department()));*/
+
+        $this->repo = new DepartmentRepository($this->mockManager);
+        $this->assertNull($this->repo->findByCode($code));
+    }
 
 //
 //    public function testSave() {
