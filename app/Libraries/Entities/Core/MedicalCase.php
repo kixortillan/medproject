@@ -35,6 +35,24 @@ class MedicalCase {
     protected $diagnoses = [];
 
     /**
+     *
+     * @var type 
+     */
+    protected $createdAt;
+
+    /**
+     *
+     * @var type 
+     */
+    protected $updatedAt;
+
+    /**
+     *
+     * @var type 
+     */
+    protected $deletedAt;
+
+    /**
      * 
      * @return int
      */

@@ -3,19 +3,19 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateDepartmentsTable extends Migration
-{
+class CreateDepartmentsTable extends Migration {
+
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up()
-    {
+    public function up() {
         Schema::create('departments', function (Blueprint $table) {
-            $table->string('code', 10);
-            $table->string('name', 50);
-            $table->string('desc', 60)->nullable();
+            $table->string('code');
+            $table->string('name');
+            $table->string('description')->nullable();
+            $table->primary('code');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -26,8 +26,8 @@ class CreateDepartmentsTable extends Migration
      *
      * @return void
      */
-    public function down()
-    {
+    public function down() {
         Schema::drop('departments');
     }
+
 }

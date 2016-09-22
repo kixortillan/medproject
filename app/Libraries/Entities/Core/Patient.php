@@ -47,6 +47,24 @@ class Patient {
     protected $postalCode = '';
 
     /**
+     *
+     * @var type 
+     */
+    protected $createdAt;
+
+    /**
+     *
+     * @var type 
+     */
+    protected $updatedAt;
+
+    /**
+     *
+     * @var type 
+     */
+    protected $deletedAt;
+
+    /**
      * 
      * @return int
      */

@@ -2,13 +2,9 @@
 
 namespace App\Libraries\Entities\Core;
 
-class Department {
+use App\Libraries\Entities\Core\Contracts\InterfaceEntity;
 
-    /**
-     *
-     * @var int 
-     */
-    protected $id;
+class Department implements InterfaceEntity {
 
     /**
      *
@@ -26,47 +22,31 @@ class Department {
      *
      * @var string 
      */
-    protected $desc;
+    protected $description;
 
     /**
      *
      * @var array \App\Models\Entity\Disease 
      */
     protected $diseases = [];
-    
+
     /**
      *
      * @var type 
      */
     protected $createdAt;
-    
+
     /**
      *
      * @var type 
      */
     protected $updatedAt;
-    
+
     /**
      *
      * @var type 
      */
     protected $deletedAt;
-
-    /**
-     * 
-     * @return int
-     */
-    public function getId() {
-        return $this->id;
-    }
-
-    /**
-     * 
-     * @param int $id
-     */
-    public function setId($id) {
-        $this->id = $id;
-    }
 
     /**
      * 
@@ -104,16 +84,16 @@ class Department {
      * 
      * @return string
      */
-    public function getDesc() {
-        return $this->desc;
+    public function getDescription() {
+        return $this->description;
     }
 
     /**
      * 
      * @param string $desc
      */
-    public function setDesc($desc) {
-        $this->desc = $desc;
+    public function setDescription($desc) {
+        $this->description = $desc;
     }
 
     /**
@@ -159,6 +139,10 @@ class Department {
             'desc' => $this->getDesc(),
             'diseases' => $diseases,
         ];
+    }
+
+    public static function getTableName() {
+        return 'departments';
     }
 
 }

@@ -24,7 +24,7 @@ return [
         'medproject' => [
             'dev'        => env('APP_DEBUG'),
             'meta'       => env('DOCTRINE_METADATA', 'annotations'),
-            'connection' => env('DB_CONNECTION'),
+            'connection' => env('DB_CONNECTION', 'mysql'),
             'namespaces' => [
                 'App'
             ],
@@ -39,6 +39,9 @@ return [
             ],
             'mappings' => [
                 App\Libraries\Mappings\Core\DepartmentMapping::class,
+                App\Libraries\Mappings\Core\PatientMapping::class,
+                App\Libraries\Mappings\Core\MedicalCaseMapping::class,
+                App\Libraries\Mappings\Core\DiagnosisMapping::class,
             ],
             /*
             |--------------------------------------------------------------------------

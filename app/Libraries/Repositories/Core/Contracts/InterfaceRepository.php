@@ -14,14 +14,14 @@ interface InterfaceRepository {
      * 
      * @param int $id
      */
-    public function one(int $id);
+    public function findById(int $id);
 
     /**
      * 
      * @param int $limit
      * @param int $offset
      */
-    public function all(int $limit = null, int $offset = null);
+    public function findAll(array $criteria, $limit, $offset = 0, $orderBy = 'id');
 
     /**
      * 

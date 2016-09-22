@@ -17,3 +17,12 @@ $factory->define(App\User::class, function ($faker) {
         'email' => $faker->email,
     ];
 });
+
+$factory->define(\App\Libraries\Entities\Core\Department::class, function($faker){
+    return [
+        'code' => $faker->unique()->word,
+        'name' => $faker->unique()->word,
+        'desc' => $faker->text,
+        'createdAt' => $faker->dateTimeThisYear(),
+    ];
+});

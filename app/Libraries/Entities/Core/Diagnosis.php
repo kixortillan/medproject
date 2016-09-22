@@ -23,6 +23,24 @@ class Diagnosis {
     protected $desc;
 
     /**
+     *
+     * @var type 
+     */
+    protected $createdAt;
+
+    /**
+     *
+     * @var type 
+     */
+    protected $updatedAt;
+
+    /**
+     *
+     * @var type 
+     */
+    protected $deletedAt;
+
+    /**
      * 
      * @return int
      */

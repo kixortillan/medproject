@@ -9,6 +9,7 @@ use LaravelDoctrine\Fluent\Fluent;
 class PatientMapping extends EntityMapping {
 
     public function map(Fluent $builder) {
+        $builder->table('patients');
         $builder->bigIncrements('id');
         $builder->text('firstName')->columnName('first_name');
         $builder->text('middleName')->columnName('middle_name')->nullable();

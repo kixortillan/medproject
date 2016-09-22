@@ -3,18 +3,17 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateMedicalCaseDepartments extends Migration
-{
+class CreateMedicalCaseDepartments extends Migration {
+
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up()
-    {
+    public function up() {
         Schema::create('medical_case_departments', function (Blueprint $table) {
-            $table->bigInteger('medical_case_id');
-            $table->bigInteger('department_code');
+            $table->bigInteger('medical_case_id')->unsigned();
+            $table->bigInteger('department_code')->unsigned();
             $table->primary(['medical_case_id', 'department_code']);
             $table->timestamps();
         });
@@ -25,8 +24,8 @@ class CreateMedicalCaseDepartments extends Migration
      *
      * @return void
      */
-    public function down()
-    {
+    public function down() {
         Schema::drop('medical_case_departments');
     }
+
 }
