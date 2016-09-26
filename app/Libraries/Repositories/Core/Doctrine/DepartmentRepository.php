@@ -36,7 +36,7 @@ class DepartmentRepository implements InterfaceDepartmentRepository {
     public function count() {
         return $this->em->createQueryBuilder()
                         ->select('COUNT(t0.code)')
-                        ->from(Department::class, 't0')
+                        ->from(Department::getTableName(), 't0')
                         ->getQuery()
                         ->getSingleScalarResult();
     }
@@ -50,8 +50,11 @@ class DepartmentRepository implements InterfaceDepartmentRepository {
         }
     }
 
-    public function search($columns, $keyword) {
+    public function search(array $columns, string $keyword) {
         $builder = $this->em->createQueryBuilder();
+
+        $builder->select()
+                ->from(Department::getTableName(), 't0');
 
         $columns = is_array($columns) ? $columns : [$columns];
 

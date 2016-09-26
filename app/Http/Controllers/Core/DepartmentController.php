@@ -13,40 +13,47 @@ class DepartmentController extends Controller {
     protected $departmentRepo;
 
     public function __construct() {
-        $this->departmentRepo = new DepartmentRepository();
+        /* $this->departmentRepo = new DepartmentRepository(); */
     }
 
     public function index(Request $request, $id = null) {
-        if ($id != null) {
-            $this->setData('department', $this->departmentRepo->one($id)->get()->toArray());
+
+        /* if ($id != null) {
+          $this->setData('department', $this->departmentRepo->one($id)->get()->toArray());
+          } else {
+          $this->validate($request, [
+          'page' => 'bail|numeric',
+          'per_page' => 'bail|numeric',
+          ]);
+
+          $page = $request->query('page', 1);
+          $limit = $request->query('per_page', 5);
+
+          $offset = $limit * ($page - 1);
+
+          $models = $this->departmentRepo
+          ->all($limit, $offset)
+          ->get();
+
+          $departments = [];
+          foreach ($models as $model) {
+          $departments[] = $model->toArray();
+          }
+
+          $this->setData('departments', $departments);
+          $this->addItem('total', $this->departmentRepo->count());
+          $this->addItem('per_page', $limit);
+          }
+
+          $this->setType(Department::getModelName());
+
+          return response()->json($this->getResponseBag()); */
+
+        if (is_null($id)) {
+            
         } else {
-            $this->validate($request, [
-                'page' => 'bail|numeric',
-                'per_page' => 'bail|numeric',
-            ]);
-
-            $page = $request->query('page', 1);
-            $limit = $request->query('per_page', 5);
-
-            $offset = $limit * ($page - 1);
-
-            $models = $this->departmentRepo
-                    ->all($limit, $offset)
-                    ->get();
-
-            $departments = [];
-            foreach ($models as $model) {
-                $departments[] = $model->toArray();
-            }
-
-            $this->setData('departments', $departments);
-            $this->addItem('total', $this->departmentRepo->count());
-            $this->addItem('per_page', $limit);
+            
         }
-
-        $this->setType(Department::getModelName());
-
-        return response()->json($this->getResponseBag());
     }
 
     public function store(Request $request) {
