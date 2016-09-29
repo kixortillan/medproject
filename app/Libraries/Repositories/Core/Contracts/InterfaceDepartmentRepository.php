@@ -2,6 +2,7 @@
 
 namespace App\Libraries\Repositories\Core\Contracts;
 
+use App\Libraries\Common\ValueObjects\SearchCriteria;
 use App\Libraries\Entities\Core\Department;
 
 interface InterfaceDepartmentRepository {
@@ -26,20 +27,12 @@ interface InterfaceDepartmentRepository {
 
     /**
      * 
-     * @param int $limit
-     * @param int $offset
+     * @param SearchCriteria $search
      */
-    public function findAll(array $criteria, $limit, $offset = 0, $orderBy = 'id');
+    public function findAll(SearchCriteria $search);
 
     /**
      * 
      */
     public function count();
-
-    /**
-     * 
-     * @param type $columns
-     * @param type $keyword
-     */
-    public function search($columns, $keyword);
 }

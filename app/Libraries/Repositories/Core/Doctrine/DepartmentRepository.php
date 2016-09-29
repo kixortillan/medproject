@@ -2,8 +2,9 @@
 
 namespace App\Libraries\Repositories\Core\Doctrine;
 
-use App\Libraries\Entities\Core\Department;
 use App\Libraries\Repositories\Core\Contracts\InterfaceDepartmentRepository;
+use App\Libraries\Common\ValueObjects\SearchCriteria;
+use App\Libraries\Entities\Core\Department;
 use Doctrine\ORM\EntityManagerInterface;
 
 class DepartmentRepository implements InterfaceDepartmentRepository {
@@ -28,9 +29,25 @@ class DepartmentRepository implements InterfaceDepartmentRepository {
         ]);
     }
 
-    public function findAll(array $criteria, $limit, $offset = 0, $orderBy = 'id') {
-        return $this->em->getRepository(Department::class)
-                        ->findBy($criteria, $orderBy, $limit, $offset);
+    public function findAll(SearchCriteria $search) {
+        $builder = $this->em->createQueryBuilder();
+
+        $builder->select()
+                ->from(Department::getTableName(), 't0');
+
+        foreach ($search->getColumns() as $key => $val) {
+            $builder->orWhere("$val LIKE :$key")
+                    ->setParameter($key, $search->getKeyword());
+        }
+
+        $builder->orderBy($search->getSortBy(), $search->getOrder());
+
+        $builder->setFirstResult($search->getOffset());
+        $builder->setMaxResults($search->getLimit());
+
+        $result = $builder->getQuery()->getResult();
+
+        return collect($result);
     }
 
     public function count() {
@@ -43,29 +60,14 @@ class DepartmentRepository implements InterfaceDepartmentRepository {
 
     public function delete(int $id, $defer = false) {
         $entity = $this->em->getReference(Department::class, $id);
-        $this->em->remove($entity);
+
+        $this->em->transactional(function($em) use ($entity) {
+            $em->remove($entity);
+        });
 
         if ($defer == false) {
             $this->em->flush();
         }
-    }
-
-    public function search(array $columns, string $keyword) {
-        $builder = $this->em->createQueryBuilder();
-
-        $builder->select()
-                ->from(Department::getTableName(), 't0');
-
-        $columns = is_array($columns) ? $columns : [$columns];
-
-        foreach ($columns as $key => $val) {
-            $builder->orWhere("$val LIKE :$key")
-                    ->setParameter($key, $keyword);
-        }
-
-        $result = $builder->getQuery()->getResult();
-
-        return $result;
     }
 
 }

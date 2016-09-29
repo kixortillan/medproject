@@ -3,9 +3,11 @@
 namespace App\Libraries\Services\Core;
 
 use App\Libraries\Repositories\Core\Contracts\InterfaceDepartmentRepository;
-use Illuminate\Pagination\Paginator;
+use App\Libraries\Services\Core\Contracts\InterfaceDepartmentService;
+use App\Libraries\Common\ValueObjects\SearchCriteria;
+use League\Fractal\Pagination\Cursor;
 
-class DepartmentService {
+class DepartmentService implements InterfaceDepartmentService {
 
     protected $deptRepo;
 
@@ -19,16 +21,22 @@ class DepartmentService {
      * @param int $perPage
      * @return Paginator
      */
-    public function paginate(string $keyword = null, int $page, int $perPage) {
+    public function paginate(int $page, int $perPage, string $keyword = null) {
         $currentPage = $page - 1;
-        $currentItem = $currentPage * $perPage;
+        
+        //$currentItem = $currentPage * $perPage;
 
+        $departments = $this->deptRepo->findAll(new SearchCriteria($perPage, $page, 'created_at', 'asc', [], $keyword));
 
-        $departments = $this->deptRepo->findAll([], $perPage, $currentItem);
+        //$paginator = new Paginator($departments, $perPage, $currentPage);
 
-        $paginator = new Paginator($departments, $perPage, $currentPage);
+        $cursor = new Cursor($perPage, $departments->first()->getCode(), $departments->last()->getCode(), $this->deptRepo->count());
 
-        return $paginator;
+        $resource = new \League\Fractal\Resource\Collection($departments, new \App\Libraries\Transformers\Core\DepartmentTranformer());
+
+        $resource->setCursor($cursor);
+
+        return $resource;
 
         /* $models = $this->departmentRepo->all($page, $perPage * ($page - 1));
 
@@ -38,6 +46,10 @@ class DepartmentService {
           }
 
           return $departments; */
+    }
+
+    public function departmentDetails(string $code) {
+        $department = $this->deptRepo->findByCode($code);
     }
 
     /**

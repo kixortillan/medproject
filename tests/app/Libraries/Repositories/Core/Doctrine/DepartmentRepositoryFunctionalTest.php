@@ -19,9 +19,9 @@ class DepartmentRepositoryFunctionalTest extends TestCase {
     }
 
     public function testFindByCode() {
-        //$entity = entity(\App\Libraries\Entities\Core\Department::class)
-         //       ->create();
-        //$this->assertInstanceOf(\App\Libraries\Entities\Core\Department::class, $this->repo->findByCode($entity->getCode()));
+        $entity = entity(\App\Libraries\Entities\Core\Department::class)
+                ->create();
+        $this->assertInstanceOf(\App\Libraries\Entities\Core\Department::class, $this->repo->findByCode($entity->getCode()));
     }
 
 //    public function testFindByCodeFail() {
@@ -33,7 +33,6 @@ class DepartmentRepositoryFunctionalTest extends TestCase {
 //        $this->assertNotNull($count);
 //        $this->assertTrue(is_numeric($count));
 //    }
-
 //
 //    public function testSave() {
 //        

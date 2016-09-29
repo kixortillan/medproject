@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Core;
 
 use App\Libraries\Repositories\Core\DepartmentRepository;
+use App\Libraries\Services\Core\Contracts\InterfaceDepartmentService;
 use App\Http\Controllers\Controller;
 use App\Models\Entity\Department;
 use Illuminate\Http\Request;
@@ -11,8 +12,10 @@ use Exception;
 class DepartmentController extends Controller {
 
     protected $departmentRepo;
+    protected $service;
 
-    public function __construct() {
+    public function __construct(InterfaceDepartmentService $service) {
+        $this->service = $service;
         /* $this->departmentRepo = new DepartmentRepository(); */
     }
 
@@ -50,10 +53,12 @@ class DepartmentController extends Controller {
           return response()->json($this->getResponseBag()); */
 
         if (is_null($id)) {
-            
+            $result = $this->service->departmentDetails($id);
         } else {
-            
+            $this->service->paginate($pageNo, $perPage, $keyword);
         }
+        
+        return response()->json($result);
     }
 
     public function store(Request $request) {
