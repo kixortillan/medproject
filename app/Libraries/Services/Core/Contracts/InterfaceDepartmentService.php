@@ -4,7 +4,7 @@ namespace App\Libraries\Services\Core\Contracts;
 
 interface InterfaceDepartmentService {
 
-    public function paginate(int $pageNo, int $perPage, string $keyword);
+    public function paginate($page, $perPage, $keyword = null);
 
-    public function departmentDetails(string $code);
+    public function departmentDetails($code);
 }

@@ -17,13 +17,13 @@ interface InterfaceDepartmentRepository {
      * 
      * @param int $id
      */
-    public function delete(int $id);
+    public function delete($id);
 
     /**
      * 
      * @param string $code
      */
-    public function findByCode(string $code);
+    public function findByCode($code);
 
     /**
      * 

@@ -21,7 +21,7 @@ class DepartmentService implements InterfaceDepartmentService {
      * @param int $perPage
      * @return Paginator
      */
-    public function paginate(int $page, int $perPage, string $keyword = null) {
+    public function paginate($page, $perPage, $keyword = null) {
         $currentPage = $page - 1;
         
         //$currentItem = $currentPage * $perPage;
@@ -48,7 +48,7 @@ class DepartmentService implements InterfaceDepartmentService {
           return $departments; */
     }
 
-    public function departmentDetails(string $code) {
+    public function departmentDetails($code) {
         $department = $this->deptRepo->findByCode($code);
     }
 

@@ -52,7 +52,7 @@ class DepartmentController extends Controller {
 
           return response()->json($this->getResponseBag()); */
 
-        if (is_null($id)) {
+        if (!is_null($id)) {
             $result = $this->service->departmentDetails($id);
         } else {
             $this->service->paginate($pageNo, $perPage, $keyword);

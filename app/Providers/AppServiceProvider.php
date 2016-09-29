@@ -17,12 +17,9 @@ class AppServiceProvider extends ServiceProvider {
                 ->give(function() {
                     return app('registry')->getManagerForClass(\App\Libraries\Entities\Core\Department::class);
                 });
-                
-        $this->app->when(\App\Http\Controllers\Core\DepartmentController::class)
-                ->needs(\App\Libraries\Services\Core\Contracts\InterfaceDepartmentService::class)
-                ->give(function(){
-                   return new \App\Libraries\Services\Core\DepartmentService(new \App\Libraries\Repositories\Core\Doctrine\DepartmentRepository($em));
-                });
+                                
+        $this->app->bind(\App\Libraries\Services\Core\Contracts\InterfaceDepartmentService::class, \App\Libraries\Services\Core\DepartmentService::class);
+        $this->app->bind(\App\Libraries\Repositories\Core\Contracts\InterfaceDepartmentRepository::class, \App\Libraries\Repositories\Core\Doctrine\DepartmentRepository::class);
     }
 
 }

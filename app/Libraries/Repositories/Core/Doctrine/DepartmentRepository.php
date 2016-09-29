@@ -23,7 +23,7 @@ class DepartmentRepository implements InterfaceDepartmentRepository {
         });
     }
 
-    public function findByCode(string $code) {
+    public function findByCode($code) {
         return $this->em->getRepository(Department::class)->findOneBy([
                     'code' => $code
         ]);
@@ -58,7 +58,7 @@ class DepartmentRepository implements InterfaceDepartmentRepository {
                         ->getSingleScalarResult();
     }
 
-    public function delete(int $id, $defer = false) {
+    public function delete($id, $defer = false) {
         $entity = $this->em->getReference(Department::class, $id);
 
         $this->em->transactional(function($em) use ($entity) {
