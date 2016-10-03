@@ -3,6 +3,7 @@
 use Laravel\Lumen\Testing\DatabaseMigrations;
 use Laravel\Lumen\Testing\DatabaseTransactions;
 use App\Libraries\Services\Core\DepartmentService;
+use App\Libraries\Repositories\Core\Doctrine\DepartmentRepository;
 
 class DepartmentControllerTest extends TestCase {
 
@@ -18,10 +19,13 @@ class DepartmentControllerTest extends TestCase {
         //$this->artisan("db:seed", ['--class' => 'DepartmentTestSeeder']);
     }
 
-    public function testIndexWithId() {
+    public function testIndexWithCode() {
         $entity = entity(\App\Libraries\Entities\Core\Department::class)
                 ->create();
-        $this->json("GET", "departments/{$entity->getCode()}");
+        $this->json("GET", "departments/{$entity->getCode()}")
+                ->seeJson([
+                    'type' => 'departments'
+        ]);
     }
 
 }

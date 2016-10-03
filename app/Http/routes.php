@@ -22,7 +22,7 @@ $app->put('diseases/{id}', 'Core\DiseaseController@edit');
 $app->delete('diseases/{id}', 'Core\DiseaseController@delete');
 
 $app->get('departments', 'Core\DepartmentController@index');
-$app->get('departments/{id}', 'Core\DepartmentController@index');
+$app->get('departments/{code}', 'Core\DepartmentController@index');
 $app->get('departments/{id}/diseases', 'Core\DepartmentController@index');
 $app->get('departments/{id}/diseases/{diseaseId}', 'Core\DepartmentController@index');
 $app->post('departments', 'Core\DepartmentController@store');

@@ -9,7 +9,7 @@ class DepartmentTranformer extends TransformerAbstract {
 
     public function transform(Department $dept) {
         return [
-            'code' => $dept->getCode(),
+            'id' => $dept->getCode(),
             'name' => $dept->getName(),
             'description' => $dept->getDescription(),
         ];

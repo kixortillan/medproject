@@ -18,11 +18,11 @@ $factory->define(App\User::class, function ($faker) {
     ];
 });
 
-$factory->define(\App\Libraries\Entities\Core\Department::class, function($faker){
+$factory->define(\App\Libraries\Entities\Core\Department::class, function(Faker\Generator $faker){
     return [
-        'code' => $faker->unique()->word,
-        'name' => $faker->unique()->word,
-        'desc' => $faker->text,
+        'code' => $faker->unixTime . $faker->word,
+        'name' => $faker->word,
+        'description' => $faker->text,
         'createdAt' => $faker->dateTimeThisYear(),
     ];
 });

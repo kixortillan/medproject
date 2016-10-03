@@ -40,7 +40,7 @@ class SearchCriteria {
      */
     protected $order = 'asc';
 
-    public function __construct(int $offset = 0, int $limit = 10, string $sortBy = null, string $order = 'asc', $columns = null, string $keyword = null) {
+    public function __construct($offset = 0, $limit = 10, $sortBy = null, $order = 'asc', $columns = null, $keyword = null) {
         $this->offset = $offset;
         $this->limit = $limit;
         $this->sortBy = $sortBy;

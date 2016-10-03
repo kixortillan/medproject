@@ -24,15 +24,25 @@ class DepartmentRepositoryFunctionalTest extends TestCase {
         $this->assertInstanceOf(\App\Libraries\Entities\Core\Department::class, $this->repo->findByCode($entity->getCode()));
     }
 
-//    public function testFindByCodeFail() {
-//        $this->assertNull($this->repo->findByCode($this->faker->unique()->word));
-//    }
-//
-//    public function testCount() {
-//        $count = $this->repo->count();
-//        $this->assertNotNull($count);
-//        $this->assertTrue(is_numeric($count));
-//    }
+    public function testFindByCodeFail() {
+        $this->assertNull($this->repo->findByCode($this->faker->unique()->word));
+    }
+
+    public function testCount() {
+        $count = $this->repo->count();
+        $this->assertNotNull($count);
+        $this->assertTrue(is_numeric($count));
+    }
+
+    public function testFindAll() {
+        $arrayEntity = entity(\App\Libraries\Entities\Core\Department::class, 200)
+                ->create();
+        
+        $search = new App\Libraries\Common\ValueObjects\SearchCriteria(0, 10, 'createdAt', 'asc', [], null);
+        
+        $this->assertInstanceOf(\Illuminate\Support\Collection::class, $this->repo->findAll($search));
+    }
+
 //
 //    public function testSave() {
 //        

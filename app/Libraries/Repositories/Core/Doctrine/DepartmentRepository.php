@@ -32,15 +32,15 @@ class DepartmentRepository implements InterfaceDepartmentRepository {
     public function findAll(SearchCriteria $search) {
         $builder = $this->em->createQueryBuilder();
 
-        $builder->select()
-                ->from(Department::getTableName(), 't0');
+        $builder->select('t0')
+                ->from(Department::class, 't0');
 
-        foreach ($search->getColumns() as $key => $val) {
-            $builder->orWhere("$val LIKE :$key")
-                    ->setParameter($key, $search->getKeyword());
+        foreach ($search->getColumns() as $col) {
+            $builder->orWhere("t0.{$col} LIKE :{$col}")
+                    ->setParameter($col, $search->getKeyword());
         }
 
-        $builder->orderBy($search->getSortBy(), $search->getOrder());
+        $builder->orderBy("t0.{$search->getSortBy()}", $search->getOrder());
 
         $builder->setFirstResult($search->getOffset());
         $builder->setMaxResults($search->getLimit());
@@ -53,7 +53,7 @@ class DepartmentRepository implements InterfaceDepartmentRepository {
     public function count() {
         return $this->em->createQueryBuilder()
                         ->select('COUNT(t0.code)')
-                        ->from(Department::getTableName(), 't0')
+                        ->from(Department::class, 't0')
                         ->getQuery()
                         ->getSingleScalarResult();
     }

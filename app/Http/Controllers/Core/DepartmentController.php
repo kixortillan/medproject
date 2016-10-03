@@ -19,7 +19,7 @@ class DepartmentController extends Controller {
         /* $this->departmentRepo = new DepartmentRepository(); */
     }
 
-    public function index(Request $request, $id = null) {
+    public function index(Request $request, $code = null) {
 
         /* if ($id != null) {
           $this->setData('department', $this->departmentRepo->one($id)->get()->toArray());
@@ -52,13 +52,19 @@ class DepartmentController extends Controller {
 
           return response()->json($this->getResponseBag()); */
 
-        if (!is_null($id)) {
-            $result = $this->service->departmentDetails($id);
+        $pageNo = $request->query('page', 1);
+        $perPage = $request->query('per_page', 5);
+
+        $search = $request->query('search', null);
+
+        if (!is_null($code)) {
+            $result = $this->service->departmentDetails($code);
         } else {
-            $this->service->paginate($pageNo, $perPage, $keyword);
+            $result = $this->service->paginate($pageNo, $perPage, ['code'], $search);
         }
-        
-        return response()->json($result);
+        $manager = new \League\Fractal\Manager();
+        $manager->setSerializer(new \League\Fractal\Serializer\JsonApiSerializer());
+        return response()->json($manager->createData($result)->toArray());
     }
 
     public function store(Request $request) {

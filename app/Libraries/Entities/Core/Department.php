@@ -141,8 +141,4 @@ class Department implements InterfaceEntity {
         ];
     }
 
-    public static function getTableName() {
-        return 'departments';
-    }
-
 }
