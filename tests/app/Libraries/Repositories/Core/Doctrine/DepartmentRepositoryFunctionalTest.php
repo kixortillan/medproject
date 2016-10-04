@@ -34,19 +34,48 @@ class DepartmentRepositoryFunctionalTest extends TestCase {
         $this->assertTrue(is_numeric($count));
     }
 
-    public function testFindAll() {
+    public function testFindAllNoSearch() {
         $arrayEntity = entity(\App\Libraries\Entities\Core\Department::class, 200)
                 ->create();
-        
+
         $search = new App\Libraries\Common\ValueObjects\SearchCriteria(0, 10, 'createdAt', 'asc', [], null);
-        
+
         $this->assertInstanceOf(\Illuminate\Support\Collection::class, $this->repo->findAll($search));
     }
 
-//
-//    public function testSave() {
-//        
-//    }
+    public function testFindAllSearchNotFound() {
+        $arrayEntity = entity(\App\Libraries\Entities\Core\Department::class, 200)
+                ->create();
+
+        $search = new App\Libraries\Common\ValueObjects\SearchCriteria(0, 10, 'createdAt', 'asc', ['code', 'name', 'description'], 'not found');
+
+        $result = $this->repo->findAll($search);
+
+        $this->assertInstanceOf(\Illuminate\Support\Collection::class, $result);
+        $this->assertTrue($result->isEmpty());
+    }
+
+    public function testFindAllSearchFound() {
+        $arrayEntity = entity(\App\Libraries\Entities\Core\Department::class, 200)
+                ->create();
+
+        $randomElementIndex = mt_rand(0, 200 - 1);
+
+        $search = new App\Libraries\Common\ValueObjects\SearchCriteria(0, 10, 'createdAt', 'asc', ['code', 'name', 'description'], $arrayEntity[$randomElementIndex]->getCode());
+
+        $result = $this->repo->findAll($search);
+
+        $this->assertInstanceOf(\Illuminate\Support\Collection::class, $result);
+    }
+
+    public function testSave() {
+        $entity = entity(\App\Libraries\Entities\Core\Department::class)->make();
+
+        $this->repo->save($entity);
+
+        $this->assertNotNull($this->repo->findByCode($entity->getCode()));
+    }
+
 //
 //    public function testSaveFail() {
 //        $model = new \App\Libraries\Entities\Core\Department();
