@@ -4,7 +4,7 @@ use Laravel\Lumen\Testing\DatabaseMigrations;
 use Laravel\Lumen\Testing\DatabaseTransactions;
 use App\Libraries\Repositories\Core\Doctrine\DepartmentRepository;
 
-class DepartmentRepositoryFunctionalTest extends TestCase {
+class PatientRepositoryFunctionalTest extends TestCase {
 
     use DatabaseMigrations;
 
@@ -13,19 +13,19 @@ class DepartmentRepositoryFunctionalTest extends TestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->repo = new DepartmentRepository(app('registry')->getManagerForClass(\App\Libraries\Entities\Core\Department::class));
+        $this->repo = new PatientRepository(app('registry')->getManagerForClass(\App\Libraries\Entities\Core\Department::class));
         $this->faker = Faker\Factory::create();
         //$this->artisan("db:seed", ['--class' => 'DepartmentTestSeeder']);
     }
 
-    public function testFindByCode() {
-        $entity = entity(\App\Libraries\Entities\Core\Department::class)
+    public function testFindById() {
+        $entity = entity(\App\Libraries\Entities\Core\Patient::class)
                 ->create();
-        $this->assertInstanceOf(\App\Libraries\Entities\Core\Department::class, $this->repo->findByCode($entity->getCode()));
+        $this->assertInstanceOf(\App\Libraries\Entities\Core\Patient::class, $this->repo->findById($entity->getId()));
     }
 
-    public function testFindByCodeFail() {
-        $this->assertNull($this->repo->findByCode($this->faker->unique()->word));
+    public function testFindByIdFail() {
+        $this->assertNull($this->repo->findByCode($this->faker->randomDigitNotNull));
     }
 
     public function testCount() {
@@ -35,7 +35,7 @@ class DepartmentRepositoryFunctionalTest extends TestCase {
     }
 
     public function testFindAllNoSearch() {
-        $arrayEntity = entity(\App\Libraries\Entities\Core\Department::class, 200)
+        $arrayEntity = entity(\App\Libraries\Entities\Core\Patient::class, 200)
                 ->create();
 
         $search = new App\Libraries\Common\ValueObjects\SearchCriteria(0, 10, 'createdAt', 'asc', [], null);
