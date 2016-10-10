@@ -15,9 +15,9 @@ interface InterfaceDepartmentRepository {
 
     /**
      * 
-     * @param int $id
+     * @param string $code
      */
-    public function delete($id);
+    public function delete($code);
 
     /**
      * 

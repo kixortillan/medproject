@@ -60,10 +60,11 @@ class DepartmentController extends Controller {
         if (!is_null($code)) {
             $result = $this->service->departmentDetails($code);
         } else {
-            $result = $this->service->paginate($pageNo, $perPage, ['code'], $search);
+            $result = $this->service->paginate($pageNo, $perPage, [], $search);
         }
         $manager = new \League\Fractal\Manager();
         $manager->setSerializer(new \League\Fractal\Serializer\JsonApiSerializer());
+        
         return response()->json($manager->createData($result)->toArray());
     }
 

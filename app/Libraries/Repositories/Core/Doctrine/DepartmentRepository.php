@@ -58,8 +58,8 @@ class DepartmentRepository implements InterfaceDepartmentRepository {
                         ->getSingleScalarResult();
     }
 
-    public function delete($id, $defer = false) {
-        $entity = $this->em->getReference(Department::class, $id);
+    public function delete($code, $defer = false) {
+        $entity = $this->em->getReference(Department::class, $code);
 
         $this->em->transactional(function($em) use ($entity) {
             $em->remove($entity);

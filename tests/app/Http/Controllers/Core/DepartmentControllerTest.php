@@ -28,4 +28,14 @@ class DepartmentControllerTest extends TestCase {
         ]);
     }
 
+    public function testIndexWithPagination() {
+        $entity = entity(\App\Libraries\Entities\Core\Department::class)
+                ->create();
+        $this->seeJson("GET", "departments")
+                ->seeJson([
+                    'type' => 'departments',
+                    'meta' => 'cursor'
+        ]);
+    }
+
 }
