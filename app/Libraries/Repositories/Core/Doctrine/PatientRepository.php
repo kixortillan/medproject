@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Libraries\Repositories\Core;
+namespace App\Libraries\Repositories\Core\Doctrine;
 
 use App\Libraries\Repositories\Core\Contracts\InterfacePatientRepository;
 use App\Libraries\Common\ValueObjects\SearchCriteria;

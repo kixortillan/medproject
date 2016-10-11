@@ -2,7 +2,7 @@
 
 use Laravel\Lumen\Testing\DatabaseMigrations;
 use Laravel\Lumen\Testing\DatabaseTransactions;
-use App\Libraries\Repositories\Core\Doctrine\DepartmentRepository;
+use App\Libraries\Repositories\Core\Doctrine\PatientRepository;
 
 class PatientRepositoryFunctionalTest extends TestCase {
 
