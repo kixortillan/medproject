@@ -3,6 +3,7 @@
 namespace App\Libraries\Repositories\Core\Contracts;
 
 use App\Libraries\Entities\Core\Patient;
+use App\Libraries\Common\ValueObjects\SearchCriteria;
 
 interface InterfacePatientRepository {
 

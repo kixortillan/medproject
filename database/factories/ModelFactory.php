@@ -38,3 +38,11 @@ $factory->define(\App\Libraries\Entities\Core\Patient::class, function(Faker\Gen
         'createdAt' => $faker->dateTimeThisYear(),
     ];
 });
+
+$factory->define(\App\Libraries\Entities\Core\MedicalCase::class, function(Faker\Generator $faker) {
+    return [
+        'id' => $faker->randomDigitNotNull,
+        'serialNum' => $faker->randomNumber(),
+        'createdAt' => $faker->dateTimeThisYear(),
+    ];
+});

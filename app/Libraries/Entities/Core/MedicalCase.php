@@ -2,6 +2,8 @@
 
 namespace App\Libraries\Entities\Core;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 class MedicalCase {
 
     /**
@@ -20,19 +22,19 @@ class MedicalCase {
      *
      * @var type 
      */
-    protected $departments = [];
+    protected $departments;
 
     /**
      *
      * @var type 
      */
-    protected $patients = [];
+    protected $patients;
 
     /**
      *
      * @var type 
      */
-    protected $diagnoses = [];
+    protected $diagnoses;
 
     /**
      *
@@ -51,6 +53,11 @@ class MedicalCase {
      * @var type 
      */
     protected $deletedAt;
+
+    public function __construct() {
+        $this->patients = new ArrayCollection();
+        $this->departments = new ArrayCollection();
+    }
 
     /**
      * 
@@ -97,7 +104,7 @@ class MedicalCase {
      * @param \App\Models\Entity\Department $department
      */
     public function addDepartment(Department $department) {
-        $this->departments[] = $department;
+        $this->departments->add($department);
     }
 
     /**
@@ -113,7 +120,7 @@ class MedicalCase {
      * @param \App\Models\Entity\Patient $patient
      */
     public function addPatient(Patient $patient) {
-        $this->patients[] = $patient;
+        $this->patients->add($patient);
     }
 
     /**
