@@ -10,7 +10,7 @@ class PatientMapping extends EntityMapping {
 
     public function map(Fluent $builder) {
         $builder->table('patients');
-        $builder->bigIncrements('id');
+        $builder->bigIncrements('id')->columnName('id');
         $builder->text('firstName')->columnName('first_name');
         $builder->text('middleName')->columnName('middle_name')->nullable();
         $builder->text('lastName')->columnName('last_name');

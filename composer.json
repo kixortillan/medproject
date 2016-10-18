@@ -12,7 +12,8 @@
         "mlntn/lumen-artisan-serve": "~1",
         "laravel-doctrine/orm": "1.2.*",
         "laravel-doctrine/fluent": "^1.1",
-        "league/fractal": "^0.14.0"
+        "league/fractal": "^0.14.0",
+        "vluzrmos/tinker": "^1.1"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

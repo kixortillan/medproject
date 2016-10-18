@@ -6,6 +6,7 @@ use App\Libraries\Repositories\Core\Contracts\InterfacePatientRepository;
 use App\Libraries\Common\ValueObjects\SearchCriteria;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Libraries\Entities\Core\Patient;
+use Carbon\Carbon;
 
 class PatientRepository implements InterfacePatientRepository {
 
@@ -17,17 +18,19 @@ class PatientRepository implements InterfacePatientRepository {
 
     public function count() {
         return $this->em->createQueryBuilder()
-                        ->select('COUNT(t0.code)')
+                        ->select('COUNT(t0.id)')
                         ->from(Patient::class, 't0')
                         ->getQuery()
                         ->getSingleScalarResult();
     }
 
     public function delete($id, $defer = false) {
-        $entity = $this->em->getReference(Patient::class, $id);
+        $entity = $this->em
+                ->getRepository(Patient::class)
+                ->find($id);
 
         $this->em->transactional(function($em) use ($entity) {
-            $em->remove($entity);
+            $entity->setDeletedAt(Carbon::now());
         });
 
         if ($defer == false) {
@@ -43,7 +46,7 @@ class PatientRepository implements InterfacePatientRepository {
 
         foreach ($search->getColumns() as $col) {
             $builder->orWhere("t0.{$col} LIKE :{$col}")
-                    ->setParameter($col, $search->getKeyword());
+                    ->setParameter($col, "%" . $search->getKeyword() . "%");
         }
 
         $builder->orderBy("t0.{$search->getSortBy()}", $search->getOrder());
@@ -57,8 +60,15 @@ class PatientRepository implements InterfacePatientRepository {
     }
 
     public function findById($id) {
-        return $this->em->getRepository(Patient::class)
-                        ->find($id);
+        $builder = $this->em->createQueryBuilder();
+
+        $builder->select('t0')
+                ->from(Patient::class, 't0')
+                ->andWhere("t0.id = :id")
+                ->andWhere("t0.deletedAt is null")
+                ->setParameter("id", $id);
+
+        return $builder->getQuery()->getOneOrNullResult();
     }
 
     public function save(Patient $patient) {

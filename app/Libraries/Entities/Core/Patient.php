@@ -202,6 +202,22 @@ class Patient {
 
     /**
      * 
+     * @return type
+     */
+    public function getDeletetAt() {
+        return $this->deletedAt;
+    }
+
+    /**
+     * 
+     * @param type $deletedAt
+     */
+    public function setDeletedAt($deletedAt) {
+        $this->deletedAt = $deletedAt;
+    }
+
+    /**
+     * 
      * @return string
      */
     public function getFullname() {

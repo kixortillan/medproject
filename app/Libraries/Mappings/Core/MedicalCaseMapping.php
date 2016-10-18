@@ -12,14 +12,14 @@ class MedicalCaseMapping extends EntityMapping {
 
     public function map(Fluent $builder) {
         $builder->table('medical_cases');
-        $builder->bigIncrements('id');
+        $builder->bigIncrements('id')->columnName('id');
         $builder->text('serialNum')->columnName('serial_num');
         $builder->dateTime('createdAt')->columnName('created_at');
         $builder->dateTime('updatedAt')->columnName('updated_at');
         $builder->dateTime('deletedAt')->columnName('deleted_at');
 
-        $builder->oneToMany(Patient::class, 'patients');
-        $builder->oneToMany(Department::class, 'departments');
+        $builder->oneToMany(Patient::class)->mappedBy('patients')->cascadePersist();
+        $builder->oneToMany(Department::class)->mappedBy('departments')->cascadePersist();
     }
 
     public function mapFor() {

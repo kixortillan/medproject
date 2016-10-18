@@ -25,7 +25,7 @@ class DepartmentRepositoryFunctionalTest extends TestCase {
     }
 
     public function testFindByCodeFail() {
-        $this->assertNull($this->repo->findByCode($this->faker->unique()->word));
+        $this->assertNull($this->repo->findByCode('not found'));
     }
 
     public function testCount() {

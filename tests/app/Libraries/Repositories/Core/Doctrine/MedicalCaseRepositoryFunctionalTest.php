@@ -19,13 +19,13 @@ class MedicalRepositoryFunctionalTest extends TestCase {
     }
 
     public function testFindById() {
-        $entity = entity(\App\Libraries\Entities\Core\Patient::class)
+        $entity = entity(\App\Libraries\Entities\Core\MedicalCase::class)
                 ->create();
-        $this->assertInstanceOf(\App\Libraries\Entities\Core\Patient::class, $this->repo->findById($entity->getId()));
+        $this->assertInstanceOf(\App\Libraries\Entities\Core\MedicalCase::class, $this->repo->findById($entity->getId()));
     }
 
     public function testFindByIdFail() {
-        $this->assertNull($this->repo->findByCode($this->faker->randomDigitNotNull));
+        $this->assertNull($this->repo->findById(-1));
     }
 
     public function testCount() {
@@ -35,7 +35,7 @@ class MedicalRepositoryFunctionalTest extends TestCase {
     }
 
     public function testFindAllNoSearch() {
-        $arrayEntity = entity(\App\Libraries\Entities\Core\Patient::class, 200)
+        $arrayEntity = entity(\App\Libraries\Entities\Core\MedicalCase::class, 200)
                 ->create();
 
         $search = new App\Libraries\Common\ValueObjects\SearchCriteria(0, 10, 'createdAt', 'asc', [], null);
@@ -44,10 +44,10 @@ class MedicalRepositoryFunctionalTest extends TestCase {
     }
 
     public function testFindAllSearchNotFound() {
-        $arrayEntity = entity(\App\Libraries\Entities\Core\Department::class, 200)
+        $arrayEntity = entity(\App\Libraries\Entities\Core\MedicalCase::class, 200)
                 ->create();
 
-        $search = new App\Libraries\Common\ValueObjects\SearchCriteria(0, 10, 'createdAt', 'asc', ['code', 'name', 'description'], 'not found');
+        $search = new App\Libraries\Common\ValueObjects\SearchCriteria(0, 10, 'createdAt', 'asc', ['id', 'serialNum'], 'not found');
 
         $result = $this->repo->findAll($search);
 
@@ -56,12 +56,12 @@ class MedicalRepositoryFunctionalTest extends TestCase {
     }
 
     public function testFindAllSearchFound() {
-        $arrayEntity = entity(\App\Libraries\Entities\Core\Department::class, 200)
+        $arrayEntity = entity(\App\Libraries\Entities\Core\MedicalCase::class, 200)
                 ->create();
 
         $randomElementIndex = mt_rand(0, 200 - 1);
 
-        $search = new App\Libraries\Common\ValueObjects\SearchCriteria(0, 10, 'createdAt', 'asc', ['code', 'name', 'description'], $arrayEntity[$randomElementIndex]->getCode());
+        $search = new App\Libraries\Common\ValueObjects\SearchCriteria(0, 10, 'createdAt', 'asc', ['id', 'serialNum'], $arrayEntity[$randomElementIndex]->getId());
 
         $result = $this->repo->findAll($search);
 
@@ -69,30 +69,32 @@ class MedicalRepositoryFunctionalTest extends TestCase {
     }
 
     public function testSave() {
-        $entity = entity(\App\Libraries\Entities\Core\Department::class)->make();
+        $entity = entity(\App\Libraries\Entities\Core\MedicalCase::class)->make();
 
         $this->repo->save($entity);
 
-        $this->assertNotNull($this->repo->findByCode($entity->getCode()));
+        $this->assertNotNull($this->repo->findById($entity->getId()));
     }
 
     public function testDelete() {
-        $entity = entity(\App\Libraries\Entities\Core\Department::class)->create();
+        $entity = entity(\App\Libraries\Entities\Core\MedicalCase::class)->create();
 
-        $this->repo->delete($entity->getCode());
+        $this->repo->delete($entity->getId());
 
-        $this->assertNull($this->repo->findByCode($entity->getCode()));
+        $this->assertNull($this->repo->findById($entity->getId()));
     }
-    
-    public function testPatientsByMedicalCase(){
+
+    public function testPatientsByMedicalCase() {
+        $result = $this->repo->patientsByMedicalCase($medicalCaseId);
+        $this->assertNotNull($result);
+        $this->assertNotEmpty($result);
+    }
+
+    public function testDepartmentHistoryByMedicalCase() {
         
     }
-    
-    public function testDepartmentHistoryByMedicalCase(){
-        
-    }
-    
-    public function testCurrentDepartmentByMedicalCase(){
+
+    public function testCurrentDepartmentByMedicalCase() {
         
     }
 

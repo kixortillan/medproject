@@ -42,7 +42,9 @@ $factory->define(\App\Libraries\Entities\Core\Patient::class, function(Faker\Gen
 $factory->define(\App\Libraries\Entities\Core\MedicalCase::class, function(Faker\Generator $faker) {
     return [
         'id' => $faker->randomDigitNotNull,
-        'serialNum' => $faker->randomNumber(),
+        'serialNum' => $faker->randomDigitNotNull,
+        'departments' => entity(\App\Libraries\Entities\Core\Department::class, mt_rand(2, 5))->make()->toArray(),
+        'patients' => entity(\App\Libraries\Entities\Core\Patient::class, mt_rand(2, 5))->make()->toArray(),
         'createdAt' => $faker->dateTimeThisYear(),
     ];
 });

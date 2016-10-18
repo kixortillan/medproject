@@ -95,6 +95,22 @@ class MedicalCase {
      * 
      * @return type
      */
+    public function getDeletetAt() {
+        return $this->deletedAt;
+    }
+
+    /**
+     * 
+     * @param type $deletedAt
+     */
+    public function setDeletedAt($deletedAt) {
+        $this->deletedAt = $deletedAt;
+    }
+
+    /**
+     * 
+     * @return type
+     */
     public function getDepartments() {
         return $this->departments;
     }

@@ -95,6 +95,22 @@ class Department implements InterfaceEntity {
     public function setDescription($desc) {
         $this->description = $desc;
     }
+    
+    /**
+     * 
+     * @return type
+     */
+    public function getDeletetAt() {
+        return $this->deletedAt;
+    }
+
+    /**
+     * 
+     * @param type $deletedAt
+     */
+    public function setDeletedAt($deletedAt) {
+        $this->deletedAt = $deletedAt;
+    }
 
     /**
      * 

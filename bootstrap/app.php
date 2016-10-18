@@ -83,6 +83,7 @@ $app->register(App\Providers\AppServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 $app->register(Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
 $app->register(LaravelDoctrine\ORM\DoctrineServiceProvider::class);
+$app->register(Vluzrmos\Tinker\TinkerServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------

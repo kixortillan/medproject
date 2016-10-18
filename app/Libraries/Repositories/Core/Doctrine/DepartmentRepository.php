@@ -6,6 +6,7 @@ use App\Libraries\Repositories\Core\Contracts\InterfaceDepartmentRepository;
 use App\Libraries\Common\ValueObjects\SearchCriteria;
 use App\Libraries\Entities\Core\Department;
 use Doctrine\ORM\EntityManagerInterface;
+use Carbon\Carbon;
 
 class DepartmentRepository implements InterfaceDepartmentRepository {
 
@@ -24,9 +25,15 @@ class DepartmentRepository implements InterfaceDepartmentRepository {
     }
 
     public function findByCode($code) {
-        return $this->em->getRepository(Department::class)->findOneBy([
-                    'code' => $code
-        ]);
+        $builder = $this->em->createQueryBuilder();
+
+        $builder->select('t0')
+                ->from(Department::class, 't0')
+                ->andWhere("t0.code = :code")
+                ->andWhere("t0.deletedAt is null")
+                ->setParameter("code", $code);
+
+        return $builder->getQuery()->getOneOrNullResult();
     }
 
     public function findAll(SearchCriteria $search) {
@@ -37,7 +44,7 @@ class DepartmentRepository implements InterfaceDepartmentRepository {
 
         foreach ($search->getColumns() as $col) {
             $builder->orWhere("t0.{$col} LIKE :{$col}")
-                    ->setParameter($col, $search->getKeyword());
+                    ->setParameter($col, "%" . $search->getKeyword() . "%");
         }
 
         $builder->orderBy("t0.{$search->getSortBy()}", $search->getOrder());
@@ -59,10 +66,12 @@ class DepartmentRepository implements InterfaceDepartmentRepository {
     }
 
     public function delete($code, $defer = false) {
-        $entity = $this->em->getReference(Department::class, $code);
+        $entity = $this->em
+                ->getRepository(Department::class)
+                ->find($code);
 
         $this->em->transactional(function($em) use ($entity) {
-            $em->remove($entity);
+            $entity->setDeletedAt(Carbon::now());
         });
 
         if ($defer == false) {
