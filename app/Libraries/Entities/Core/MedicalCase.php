@@ -2,6 +2,7 @@
 
 namespace App\Libraries\Entities\Core;
 
+use App\Libraries\Entities\Core\MedicalCasePatient;
 use Doctrine\Common\Collections\ArrayCollection;
 
 class MedicalCase {
@@ -28,12 +29,6 @@ class MedicalCase {
      *
      * @var type 
      */
-    protected $patients;
-
-    /**
-     *
-     * @var type 
-     */
     protected $diagnoses;
 
     /**
@@ -54,9 +49,14 @@ class MedicalCase {
      */
     protected $deletedAt;
 
+    /**
+     *
+     * @var type 
+     */
+    protected $medicalCasePatient;
+
     public function __construct() {
-        $this->patients = new ArrayCollection();
-        $this->departments = new ArrayCollection();
+        $this->medicalCasePatient = new ArrayCollection();
     }
 
     /**
@@ -89,22 +89,6 @@ class MedicalCase {
      */
     public function setSerialNum($serialNum) {
         $this->serialNum = $serialNum;
-    }
-
-    /**
-     * 
-     * @return type
-     */
-    public function getDeletetAt() {
-        return $this->deletedAt;
-    }
-
-    /**
-     * 
-     * @param type $deletedAt
-     */
-    public function setDeletedAt($deletedAt) {
-        $this->deletedAt = $deletedAt;
     }
 
     /**
@@ -153,6 +137,22 @@ class MedicalCase {
      */
     public function addDiagnoses(Diagnosis $diagnosis) {
         $this->diagnoses[] = $diagnosis;
+    }
+
+    /**
+     * 
+     * @return type
+     */
+    public function getMedicalCasePatient() {
+        return $this->medicalCasePatient;
+    }
+
+    /**
+     * 
+     * @param MedicalCasePatient $assoc
+     */
+    public function addMedicalCasePatient(MedicalCasePatient $assoc) {
+        $this->medicalCasePatient->add($assoc);
     }
 
     /**

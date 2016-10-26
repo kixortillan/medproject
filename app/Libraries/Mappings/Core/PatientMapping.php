@@ -2,6 +2,7 @@
 
 namespace App\Libraries\Mappings\Core;
 
+use App\Libraries\Entities\Core\MedicalCasePatient;
 use App\Libraries\Entities\Core\Patient;
 use LaravelDoctrine\Fluent\EntityMapping;
 use LaravelDoctrine\Fluent\Fluent;
@@ -19,6 +20,9 @@ class PatientMapping extends EntityMapping {
         $builder->dateTime('createdAt')->columnName('created_at');
         $builder->dateTime('updatedAt')->columnName('updated_at');
         $builder->dateTime('deletedAt')->columnName('deleted_at');
+
+        $builder->oneToMany(MedicalCasePatient::class)
+                ->cascadePersist();
     }
 
     public function mapFor() {

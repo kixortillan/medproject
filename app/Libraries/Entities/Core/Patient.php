@@ -2,6 +2,9 @@
 
 namespace App\Libraries\Entities\Core;
 
+use App\Libraries\Entities\Core\MedicalCasePatient;
+use Doctrine\Common\Collections\ArrayCollection;
+
 class Patient {
 
     /**
@@ -63,6 +66,16 @@ class Patient {
      * @var type 
      */
     protected $deletedAt;
+
+    /**
+     *
+     * @var type 
+     */
+    protected $medicalCasePatient;
+
+    public function __construct() {
+        $this->medicalCasePatient = new ArrayCollection();
+    }
 
     /**
      * 
@@ -214,6 +227,22 @@ class Patient {
      */
     public function setDeletedAt($deletedAt) {
         $this->deletedAt = $deletedAt;
+    }
+
+    /**
+     * 
+     * @return type
+     */
+    public function getMedicalCasePatient() {
+        return $this->medicalCasePatient;
+    }
+
+    /**
+     * 
+     * @param MedicalCasePatient $assoc
+     */
+    public function addMedicalCasePatient(MedicalCasePatient $assoc) {
+        $this->medicalCasePatient->add($assoc);
     }
 
     /**

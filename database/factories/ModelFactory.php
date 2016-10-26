@@ -43,8 +43,6 @@ $factory->define(\App\Libraries\Entities\Core\MedicalCase::class, function(Faker
     return [
         'id' => $faker->randomDigitNotNull,
         'serialNum' => $faker->randomDigitNotNull,
-        'departments' => entity(\App\Libraries\Entities\Core\Department::class, mt_rand(2, 5))->make()->toArray(),
-        'patients' => entity(\App\Libraries\Entities\Core\Patient::class, mt_rand(2, 5))->make()->toArray(),
         'createdAt' => $faker->dateTimeThisYear(),
     ];
 });

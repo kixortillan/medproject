@@ -5,7 +5,7 @@ namespace App\Libraries\Mappings\Core;
 use App\Libraries\Entities\Core\MedicalCase;
 use App\Libraries\Entities\Core\Department;
 use LaravelDoctrine\Fluent\EntityMapping;
-use App\Libraries\Entities\Core\Patient;
+use App\Libraries\Entities\Core\MedicalCasePatient;
 use LaravelDoctrine\Fluent\Fluent;
 
 class MedicalCaseMapping extends EntityMapping {
@@ -18,8 +18,7 @@ class MedicalCaseMapping extends EntityMapping {
         $builder->dateTime('updatedAt')->columnName('updated_at');
         $builder->dateTime('deletedAt')->columnName('deleted_at');
 
-        $builder->oneToMany(Patient::class)->mappedBy('patients')->cascadePersist();
-        $builder->oneToMany(Department::class)->mappedBy('departments')->cascadePersist();
+        //$builder->manyToMany(Department::class)->mappedBy('departments')->cascadePersist();
     }
 
     public function mapFor() {
