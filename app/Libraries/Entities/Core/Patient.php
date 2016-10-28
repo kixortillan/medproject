@@ -2,7 +2,7 @@
 
 namespace App\Libraries\Entities\Core;
 
-use App\Libraries\Entities\Core\MedicalCasePatient;
+use App\Libraries\Entities\Core\MedicalCase;
 use Doctrine\Common\Collections\ArrayCollection;
 
 class Patient {
@@ -71,10 +71,12 @@ class Patient {
      *
      * @var type 
      */
+    protected $medicalCases;
+    
     protected $medicalCasePatient;
 
     public function __construct() {
-        $this->medicalCasePatient = new ArrayCollection();
+        $this->medicalCases = new ArrayCollection();
     }
 
     /**
@@ -233,16 +235,16 @@ class Patient {
      * 
      * @return type
      */
-    public function getMedicalCasePatient() {
-        return $this->medicalCasePatient;
+    public function getMedicalCases() {
+        return $this->medicalCases;
     }
 
     /**
      * 
-     * @param MedicalCasePatient $assoc
+     * @param MedicalCase $case
      */
-    public function addMedicalCasePatient(MedicalCasePatient $assoc) {
-        $this->medicalCasePatient->add($assoc);
+    public function addMedicalCase(MedicalCase $case) {
+        $this->medicalCases->add($case);
     }
 
     /**

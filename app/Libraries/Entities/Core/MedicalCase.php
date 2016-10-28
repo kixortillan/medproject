@@ -55,6 +55,12 @@ class MedicalCase {
      */
     protected $medicalCasePatient;
 
+    /**
+     *
+     * @var type 
+     */
+    protected $patient;
+
     public function __construct() {
         $this->medicalCasePatient = new ArrayCollection();
     }
@@ -111,16 +117,16 @@ class MedicalCase {
      * 
      * @return type
      */
-    public function getPatients() {
-        return $this->patients;
+    public function getPatient() {
+        return $this->patient;
     }
 
     /**
      * 
-     * @param \App\Models\Entity\Patient $patient
+     * @param \App\Libraries\Entities\Core\Patient $patient
      */
-    public function addPatient(Patient $patient) {
-        $this->patients->add($patient);
+    public function setPatient(Patient $patient) {
+        $this->patient = $patient;
     }
 
     /**

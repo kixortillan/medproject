@@ -42,6 +42,7 @@ return [
                 App\Libraries\Mappings\Core\PatientMapping::class,
                 App\Libraries\Mappings\Core\MedicalCaseMapping::class,
                 App\Libraries\Mappings\Core\DiagnosisMapping::class,
+                App\Libraries\Mappings\Core\MedicalCasePatientMapping::class,
             ],
             /*
             |--------------------------------------------------------------------------

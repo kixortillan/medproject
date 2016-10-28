@@ -11,6 +11,12 @@ class MedicalCasePatient {
      *
      * @var type 
      */
+    protected $id;
+
+    /**
+     *
+     * @var type 
+     */
     protected $medicalCase;
 
     /**

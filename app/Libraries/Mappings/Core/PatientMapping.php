@@ -21,8 +21,11 @@ class PatientMapping extends EntityMapping {
         $builder->dateTime('updatedAt')->columnName('updated_at');
         $builder->dateTime('deletedAt')->columnName('deleted_at');
 
-        $builder->oneToMany(MedicalCasePatient::class)
-                ->cascadePersist();
+        /*$builder->oneToMany(\App\Libraries\Entities\Core\MedicalCase::class, 'medicalCases')
+                ->mappedBy('patient');*/
+        
+        $builder->oneToMany(MedicalCasePatient::class, 'medicalCasePatient')
+                ->mappedBy('patient');
     }
 
     public function mapFor() {
