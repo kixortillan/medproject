@@ -99,13 +99,8 @@ class MedicalCaseSeeder extends Seeder {
 //                    unset($insertData);
 //                });
 
-        entity(App\Libraries\Entities\Core\MedicalCase::class, 10000)
-                ->create()
-                ->each(function($e){
-                    
-                    EntityManager::persist();
-                });
-
+        
+        
         
     }
 

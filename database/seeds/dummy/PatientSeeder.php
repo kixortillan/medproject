@@ -30,7 +30,7 @@ class PatientSeeder extends Seeder {
             }
         }*/
         
-        entity(\App\Libraries\Entities\Core\Patient::class, 50000)->create();
+        //entity(\App\Libraries\Entities\Core\Patient::class, 50000)->create();
     }
 
 }
