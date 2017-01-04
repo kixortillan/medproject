@@ -72,7 +72,6 @@ class Patient {
      * @var type 
      */
     protected $medicalCases;
-    
     protected $medicalCasePatient;
 
     public function __construct() {
@@ -229,6 +228,22 @@ class Patient {
      */
     public function setDeletedAt($deletedAt) {
         $this->deletedAt = $deletedAt;
+    }
+
+    /**
+     * 
+     * @return type
+     */
+    public function getMedicalCasePatient() {
+        return $this->medicalCasePatient;
+    }
+
+    /**
+     * 
+     * @param MedicalCasePatient $assoc
+     */
+    public function addMedicalCasePatient(MedicalCasePatient $assoc) {
+        $this->medicalCasePatient->add($assoc);
     }
 
     /**

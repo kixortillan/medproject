@@ -17,7 +17,37 @@ class MedicalCasePatient {
      *
      * @var type 
      */
+    protected $medicalCaseId;
+
+    /**
+     *
+     * @var type 
+     */
+    protected $patientId;
+
+    /**
+     *
+     * @var type 
+     */
     protected $medicalCase;
+
+    /**
+     *
+     * @var type 
+     */
+    protected $createdAt;
+
+    /**
+     *
+     * @var type 
+     */
+    protected $updatedAt;
+
+    /**
+     *
+     * @var type 
+     */
+    protected $deletedAt;
 
     /**
      *

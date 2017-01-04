@@ -12,11 +12,12 @@ class MedicalCasePatientMapping extends EntityMapping {
 
     public function map(Fluent $builder) {
         $builder->table('medical_case_patient');
-        $builder->bigIncrements('id')->columnName('id');
-
-        //$builder->dateTime('createdAt')->columnName('created_at');
-        //$builder->dateTime('updatedAt')->columnName('updated_at');
-        //$builder->dateTime('deletedAt')->columnName('deleted_at');
+        $builder->bigIncrements('id');
+        $builder->bigInteger('medicalCaseId')->columnName('medical_case_id');
+        $builder->bigInteger('patientId')->columnName('patient_id');
+        $builder->dateTime('createdAt')->columnName('created_at');
+        $builder->dateTime('updatedAt')->columnName('updated_at');
+        $builder->dateTime('deletedAt')->columnName('deleted_at');
 
         $builder->manyToOne(Patient::class)
                 ->addJoinColumn('patient_id', 'medical_case_id', false)
@@ -29,7 +30,7 @@ class MedicalCasePatientMapping extends EntityMapping {
                 ->inversedBy('medicalCasePatient')
                 ->fetchEager()
                 ->cascadePersist();
-        
+
         //$builder->manyToMany(Department::class)->mappedBy('departments')->cascadePersist();
     }
 

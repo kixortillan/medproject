@@ -12,6 +12,7 @@ class CreateMedicalCasePatientTable extends Migration {
      */
     public function up() {
         Schema::create('medical_case_patient', function (Blueprint $table) {
+            $table->bigIncrements('id')->unsigned();
             $table->bigInteger('medical_case_id')->unsigned();
             $table->bigInteger('patient_id')->unsigned();
             $table->timestamps();
